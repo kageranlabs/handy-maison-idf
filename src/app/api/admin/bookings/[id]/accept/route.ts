@@ -6,10 +6,11 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: any }
 ) {
   try {
-    const bookingId = params.id;
+    const resolvedParams = await params;
+    const bookingId = resolvedParams?.id || params?.id;
 
     // Fetch booking record
     const { data: booking, error: fetchError } = await supabase
