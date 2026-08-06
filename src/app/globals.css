@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #1E3F20;
+  --color-accent: #6B8E73;
+  --color-accent-light: #E8F0E9;
+  --color-bg-warm: #F9F8F6;
+  --color-surface: #FFFFFF;
+  --color-text-charcoal: #1C1C1C;
+  --color-text-muted: #666666;
+}
+
+body {
+  background-color: var(--color-bg-warm);
+  color: var(--color-text-charcoal);
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-poppins), system-ui, -apple-system, sans-serif;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1EFF0;
+}
+::-webkit-scrollbar-thumb {
+  background: #6B8E73;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #1E3F20;
+}
+
+/* Hide scrollbar for swipable strips */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Subtle ambient glow */
+.hero-glow {
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(107, 142, 115, 0.2) 0%, rgba(30, 63, 32, 0.04) 50%, transparent 70%);
+  pointer-events: none;
+}
