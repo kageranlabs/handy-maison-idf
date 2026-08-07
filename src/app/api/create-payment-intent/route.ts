@@ -3,6 +3,7 @@ import { stripe } from '@/lib/stripe';
 import { supabase } from '@/lib/supabase/client';
 import { BookingSlotItem, CustomerDetails } from '@/lib/types';
 
+export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
