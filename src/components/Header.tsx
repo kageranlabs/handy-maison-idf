@@ -54,7 +54,7 @@ export default function Header() {
             {/* Desktop Navigation Links with Active Underline Indicator */}
             <nav className="hidden md:flex items-center gap-6 text-sm">
               <Link href="/" className={getNavLinkClass('/')}>
-                <span translate="no" className="notranslate">{dict.nav.brand}</span>
+                {lang === 'fr' ? 'Accueil' : 'Home'}
               </Link>
               <Link href="/book" className={getNavLinkClass('/book')}>
                 {dict.nav.services}
@@ -117,7 +117,7 @@ export default function Header() {
                 isActiveRoute('/') ? 'bg-accent-light text-primary font-bold' : 'hover:bg-bgWarm'
               }`}
             >
-              <span translate="no" className="notranslate">{dict.nav.brand}</span>
+              <span>{lang === 'fr' ? 'Accueil' : 'Home'}</span>
               <ArrowRight className="w-4 h-4 text-accent" />
             </Link>
 

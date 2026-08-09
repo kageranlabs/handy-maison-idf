@@ -106,7 +106,7 @@ export default function Gallery() {
             {lang === 'fr' ? (
               <>La Signature <span translate="no" className="notranslate">Handy Maison</span> en Images</>
             ) : (
-              <><span translate="no" className="notranslate">Handy Maison</span> Excellence in Pictures</>
+              <><span translate="no" className="notranslate">Handy Maison</span>{' '}Excellence in Pictures</>
             )}
           </h2>
           <p className="text-base text-charcoal-muted">
