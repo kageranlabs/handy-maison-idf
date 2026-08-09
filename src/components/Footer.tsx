@@ -91,7 +91,9 @@ export default function Footer() {
             <div className="space-y-2 text-xs text-white/80">
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-accent-light shrink-0" />
-                <span>+33 1 42 68 00 00</span>
+                <a href="tel:+33753829438" className="hover:underline transition-all">
+                  +33 7 53 82 94 38
+                </a>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-accent-light shrink-0" />

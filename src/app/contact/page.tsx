@@ -47,7 +47,9 @@ export default function ContactPage() {
                 <h3 className="font-heading font-bold text-base text-primary">
                   {lang === 'fr' ? 'Téléphone' : 'Phone'}
                 </h3>
-                <p className="text-sm font-semibold text-charcoal">+33 1 42 68 00 00</p>
+                <a href="tel:+33753829438" className="text-sm font-semibold text-charcoal hover:text-primary transition-colors">
+                  +33 7 53 82 94 38
+                </a>
                 <p className="text-xs text-charcoal-muted">
                   {lang === 'fr' ? 'Du lundi au dimanche (8h-20h)' : 'Monday to Sunday (8am - 8pm)'}
                 </p>

@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 
-export function WhatsAppButton({ number = '33612345678' }: { number?: string }) {
+export function WhatsAppButton({ number = '33753829438' }: { number?: string }) {
   return (
     <motion.a
       href={`https://wa.me/${number}`}
