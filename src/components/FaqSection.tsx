@@ -55,8 +55,8 @@ export default function FaqSection() {
         en: 'Are cleaning supplies included?',
       },
       a: {
-        fr: 'Des produits professionnels écologiques sont fournis sur demande. Vous pouvez également spécifier vos consignes particulières dans le champ obligatoire lors de la réservation.',
-        en: 'Professional eco-friendly products are provided upon request. You can also specify special preferences in the mandatory notes field during checkout.',
+        fr: 'Les produits de ménage sont habituellement fournis par le client. Toutefois, sur demande, des produits spécifiques peuvent être achetés par l\'intervenant et le montant engagé sera remboursé par le client.',
+        en: 'Cleaning supplies are normally provided by the client. However, upon request, specific products can be purchased by the service provider and the amount spent will be refunded.',
       },
     },
   ];

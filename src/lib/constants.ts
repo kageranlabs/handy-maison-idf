@@ -15,8 +15,8 @@ export const SERVICES: ServiceDefinition[] = [
       en: 'Deep home cleaning, surface sanitization, and meticulous housekeeping for your residence.',
     },
     highlights: {
-      fr: ['Produits écologiques inclus', 'Service certifié & vérifié'],
-      en: ['Eco-friendly products included', 'Vetted & trusted service'],
+      fr: ['Fournis par le client (ou achetés sur demande)', 'Service certifié & vérifié'],
+      en: ['Client-provided (or purchased upon request)', 'Vetted & trusted service'],
     },
   },
   {
