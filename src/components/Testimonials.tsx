@@ -79,9 +79,9 @@ export default function Testimonials() {
 
               <p className="text-sm text-charcoal leading-relaxed italic">
                 "{lang === 'fr' ? (
-                  <><span translate="no" className="notranslate">Handy Maison</span> a complètement transformé notre quotidien à Paris. Pouvoir réserver le ménage et la garde d'enfants en un seul itinéraire avec autorisation Stripe suspendue est d'un confort absolu.</>
+                  <><span translate="no" className="notranslate">Handy Maison</span>{' '}a complètement transformé notre quotidien à Paris. Pouvoir réserver le ménage et la garde d'enfants en un seul itinéraire avec autorisation Stripe suspendue est d'un confort absolu.</>
                 ) : (
-                  <><span translate="no" className="notranslate">Handy Maison</span> completely transformed our daily routine in Paris. Booking cleaning and childcare in a single itinerary with hold authorization gives complete peace of mind.</>
+                  <><span translate="no" className="notranslate">Handy Maison</span>{' '}has completely transformed our daily life in Paris. Being able to book housekeeping and childcare in a single process with Stripe authorization suspended is incredibly convenient.</>
                 )}"
               </p>
 
