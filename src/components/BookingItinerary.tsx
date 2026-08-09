@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import { useItinerary } from '@/context/ItineraryContext';
 import CheckoutModal from './CheckoutModal';
@@ -45,12 +46,12 @@ export default function BookingItinerary() {
             <p className="text-base text-charcoal-muted max-w-md mx-auto">
               {dict.itineraryCart.emptyText}
             </p>
-            <a
-              href="#services"
+            <Link
+              href="/services"
               className="inline-flex items-center gap-2 bg-primary text-white font-semibold text-xs px-5 py-2.5 rounded-full hover:bg-primary-dark transition-all"
             >
               <span>{dict.servicesSection.title}</span>
-            </a>
+            </Link>
           </div>
         ) : (
           /* Multi-Slot List */

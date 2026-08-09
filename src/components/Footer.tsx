@@ -49,8 +49,13 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/services" className="hover:text-white transition-colors">
+                  {lang === 'fr' ? 'Prestations & Tarifs' : 'Services & Rates'}
+                </Link>
+              </li>
+              <li>
                 <Link href="/book" className="hover:text-white transition-colors">
-                  {lang === 'fr' ? 'Réserver un service' : 'Book a Service'}
+                  {lang === 'fr' ? 'Réserver un itinéraire' : 'Book an Itinerary'}
                 </Link>
               </li>
               <li>

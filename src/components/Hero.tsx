@@ -53,7 +53,7 @@ export default function Hero() {
               </Link>
 
               <Link
-                href="/book"
+                href="/services"
                 className="inline-flex items-center gap-2 bg-white text-primary border border-gray-300 font-semibold text-base px-6 py-3.5 rounded-full hover:bg-gray-50 transition-all shadow-sm"
               >
                 <span>{dict.hero.ctaServices}</span>

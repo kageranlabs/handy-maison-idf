@@ -88,7 +88,7 @@ export default function FaqSection() {
             <div className="space-y-3 pt-2 border-t border-gray-100 text-xs">
               <div className="p-3.5 rounded-2xl bg-bgWarm flex items-center justify-between font-semibold">
                 <span className="text-primary">{lang === 'fr' ? 'Paris & Région Île-de-France' : 'Paris & Île-de-France Region'}</span>
-                <span className="text-accent">{lang === 'fr' ? 'Couverture Globale' : 'Full Regional Coverage'}</span>
+                <span className="text-accent">{lang === 'fr' ? 'Couverture Régionale' : 'Regional Coverage'}</span>
               </div>
               <div className="p-3.5 rounded-2xl bg-bgWarm flex items-center justify-between font-semibold">
                 <span className="text-primary">{lang === 'fr' ? 'Interventions à Domicile' : 'Home Interventions'}</span>

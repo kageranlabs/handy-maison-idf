@@ -56,7 +56,7 @@ export default function Header() {
               <Link href="/" className={getNavLinkClass('/')}>
                 {lang === 'fr' ? 'Accueil' : 'Home'}
               </Link>
-              <Link href="/book" className={getNavLinkClass('/book')}>
+              <Link href="/services" className={getNavLinkClass('/services')}>
                 {dict.nav.services}
               </Link>
               <Link href="/contact" className={getNavLinkClass('/contact')}>
@@ -79,18 +79,20 @@ export default function Header() {
               <span className="notranslate uppercase tracking-wider">{lang === 'fr' ? 'FR' : 'EN'}</span>
             </button>
 
-            {/* Itinerary Cart CTA Button */}
+            {/* Itinerary Cart CTA Button with Floating Badge */}
             <Link
               href="/book"
               className="relative inline-flex items-center gap-2 bg-primary text-white text-xs font-semibold px-4 py-2.5 rounded-full hover:bg-primary-dark transition-all shadow-md active:scale-95"
             >
-              <ShoppingBag className="w-4 h-4 text-accent-light" />
+              <div className="relative flex items-center justify-center">
+                <ShoppingBag className="w-4 h-4 text-accent-light" />
+                {slotsCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-accent text-white font-bold text-[10px] min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center shadow-sm pointer-events-none">
+                    {slotsCount}
+                  </span>
+                )}
+              </div>
               <span className="hidden sm:inline">{dict.nav.itinerary}</span>
-              {slotsCount > 0 && (
-                <span className="bg-amber-400 text-charcoal font-bold text-[11px] px-2 py-0.5 rounded-full">
-                  {slotsCount} ({totalHoldAmount}€)
-                </span>
-              )}
             </Link>
 
             {/* Mobile Hamburger Button */}
@@ -122,10 +124,10 @@ export default function Header() {
             </Link>
 
             <Link
-              href="/book"
+              href="/services"
               onClick={() => setMobileMenuOpen(false)}
               className={`p-3 rounded-2xl transition-colors flex items-center justify-between ${
-                isActiveRoute('/book') ? 'bg-accent-light text-primary font-bold' : 'hover:bg-bgWarm'
+                isActiveRoute('/services') ? 'bg-accent-light text-primary font-bold' : 'hover:bg-bgWarm'
               }`}
             >
               <span>{dict.nav.services}</span>
