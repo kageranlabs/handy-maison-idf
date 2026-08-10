@@ -18,14 +18,61 @@ const inter = Inter({
   display: 'swap',
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://handymaison.fr';
+
 export const metadata: Metadata = {
-  title: 'Handy Maison | Services à domicile en Île-de-France',
-  description: 'Réservez vos prestations sur mesure à Paris et Île-de-France: Ménage, Repassage, Cuisine, Courses et Babysitting. Pré-autorisation bancaire Stripe sécurisée.',
-  keywords: ['Ménage Paris', 'Services à domicile Île-de-France', 'Babysitting Paris', 'Repassage à domicile', 'Handy Maison'],
+  metadataBase: new URL(siteUrl),
+  title: {
+    template: '%s | Handy Maison',
+    default: 'Handy Maison | Premium Home Services in Île-de-France',
+  },
+  description:
+    'Tailored home services across Paris & Île-de-France. Book professional cleaning, ironing, home cooking, errand running, and babysitting with secure Stripe pre-authorization.',
+  keywords: [
+    'Handy Maison',
+    'Home services Paris',
+    'Services à domicile Île-de-France',
+    'Ménage Paris',
+    'Babysitting Paris',
+    'Repassage à domicile',
+    'Courses à domicile Paris',
+    'Cleaning services Île-de-France',
+  ],
+  authors: [{ name: 'Handy Maison' }],
+  creator: 'Handy Maison',
+  publisher: 'Handy Maison',
   icons: {
     icon: '/favicon.png',
     shortcut: '/favicon.png',
     apple: '/favicon.png',
+  },
+  openGraph: {
+    title: 'Handy Maison | Premium Home Services in Île-de-France',
+    description:
+      'Tailored home services across Paris & Île-de-France. Book professional cleaning, ironing, home cooking, errand running, and babysitting with secure Stripe pre-authorization.',
+    url: siteUrl,
+    siteName: 'Handy Maison',
+    locale: 'fr_FR',
+    type: 'website',
+    images: [
+      {
+        url: '/favicon.png',
+        width: 800,
+        height: 800,
+        alt: 'Handy Maison Logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Handy Maison | Premium Home Services in Île-de-France',
+    description:
+      'Tailored home services across Paris & Île-de-France. Book professional cleaning, ironing, home cooking, errand running, and babysitting.',
+    images: ['/favicon.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
