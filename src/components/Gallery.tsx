@@ -186,7 +186,7 @@ export default function Gallery() {
                   )}
                 </span>
                 <span className="text-[10px] font-medium text-emerald-600">
-                  {lang === 'fr' ? 'Résultat Garanti' : 'Guaranteed Result'}
+                  {lang === 'fr' ? 'Résultats' : 'Results'}
                 </span>
               </div>
               <div className="relative h-72 sm:h-96 rounded-2xl overflow-hidden shadow-md border border-emerald-200 bg-gray-100">

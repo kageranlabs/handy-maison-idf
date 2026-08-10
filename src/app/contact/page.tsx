@@ -6,7 +6,7 @@ import FaqSection from '@/components/FaqSection';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 import Footer from '@/components/Footer';
 import { useLanguage } from '@/context/LanguageContext';
-import { Mail, Phone, MapPin, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
+import { Mail, Phone, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
 
 export default function ContactPage() {
   const { lang } = useLanguage();
@@ -56,7 +56,7 @@ export default function ContactPage() {
       {/* Direct Contact Cards */}
       <section className="py-12 bg-white border-b border-gray-200/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             
             {/* Phone Option */}
             <div className="p-6 rounded-3xl bg-bgWarm border border-gray-200/80 flex items-start gap-4">
@@ -115,26 +115,6 @@ export default function ContactPage() {
                 </a>
                 <p className="text-xs text-charcoal-muted">
                   {lang === 'fr' ? 'Réponse sous 2 heures ouvrées' : 'Response within 2 business hours'}
-                </p>
-              </div>
-            </div>
-
-            {/* Coverage Area Option */}
-            <div className="p-6 rounded-3xl bg-bgWarm border border-gray-200/80 flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-accent-light text-primary flex items-center justify-center shrink-0">
-                <MapPin className="w-6 h-6" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-heading font-bold text-base text-primary">
-                  {lang === 'fr' ? 'Zone d\'Intervention' : 'Coverage Area'}
-                </h3>
-                <p className="text-sm font-semibold text-charcoal">
-                  {lang === 'fr' ? 'Région Île-de-France' : 'Île-de-France Region'}
-                </p>
-                <p className="text-xs text-charcoal-muted">
-                  {lang === 'fr'
-                    ? 'Interventions à domicile dans toute la région Île-de-France'
-                    : 'Operating across the Île-de-France region'}
                 </p>
               </div>
             </div>

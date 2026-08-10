@@ -113,7 +113,7 @@ export default function Footer() {
 
         {/* Bottom Bar with Discreet Admin Portal Link */}
         <div className="pt-8 border-t border-white/10 text-center text-xs text-white/60 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} <span translate="no" className="notranslate">Handy Maison</span>. {lang === 'fr' ? 'Tous droits réservés.' : 'All rights reserved.'}</p>
+          <p>© {new Date().getFullYear()} <span translate="no" className="notranslate">Handy Maison</span>.{' '}{lang === 'fr' ? 'Tous droits réservés.' : 'All rights reserved.'}</p>
           
           <div className="flex items-center gap-4">
             <Link
