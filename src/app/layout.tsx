@@ -23,56 +23,38 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://handymaison.fr';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    template: '%s | Handy Maison',
-    default: 'Handy Maison | Premium Home Services in Île-de-France',
+    template: "%s | Handy Maison",
+    default: "Handy Maison | Premium Home Services in Île-de-France",
   },
   description:
-    'Tailored home services across Paris & Île-de-France. Book professional cleaning, ironing, home cooking, errand running, and babysitting with secure Stripe pre-authorization.',
+    "Premium domestic services in Paris and Île-de-France. Combine cleaning (ménage), ironing (repassage), babysitting (garde d'enfants), cooking (cuisine), and shopping (courses) into a single tailored itinerary.",
   keywords: [
-    'Handy Maison',
-    'Home services Paris',
-    'Services à domicile Île-de-France',
-    'Ménage Paris',
-    'Babysitting Paris',
-    'Repassage à domicile',
-    'Courses à domicile Paris',
-    'Cleaning services Île-de-France',
+    "femme de ménage Paris",
+    "aide à domicile Île-de-France",
+    "service de repassage à domicile",
+    "baby-sitter Paris",
+    "garde d'enfants Île-de-France",
+    "préparation de repas à domicile",
+    "aide pour les courses",
+    "english speaking cleaner Paris",
+    "trusted babysitter Paris",
+    "personal grocery shopper Paris",
+    "in-home cook Paris",
+    "home cleaning service near me",
   ],
-  authors: [{ name: 'Handy Maison' }],
-  creator: 'Handy Maison',
-  publisher: 'Handy Maison',
   icons: {
     icon: '/favicon.png',
     shortcut: '/favicon.png',
     apple: '/favicon.png',
   },
   openGraph: {
-    title: 'Handy Maison | Premium Home Services in Île-de-France',
-    description:
-      'Tailored home services across Paris & Île-de-France. Book professional cleaning, ironing, home cooking, errand running, and babysitting with secure Stripe pre-authorization.',
-    url: siteUrl,
-    siteName: 'Handy Maison',
-    locale: 'fr_FR',
-    type: 'website',
-    images: [
-      {
-        url: '/favicon.png',
-        width: 800,
-        height: 800,
-        alt: 'Handy Maison Logo',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Handy Maison | Premium Home Services in Île-de-France',
-    description:
-      'Tailored home services across Paris & Île-de-France. Book professional cleaning, ironing, home cooking, errand running, and babysitting.',
-    images: ['/favicon.png'],
-  },
-  robots: {
-    index: true,
-    follow: true,
+    title: "Handy Maison | Premium Home Services in Île-de-France",
+    description: "Combine cleaning, ironing, babysitting, cooking, and shopping into a single tailored itinerary. Book securely today.",
+    url: "https://handymaison.fr",
+    siteName: "Handy Maison",
+    locale: "fr_FR",
+    alternateLocale: "en_US",
+    type: "website",
   },
 };
 

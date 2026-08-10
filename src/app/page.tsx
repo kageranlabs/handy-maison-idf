@@ -1,3 +1,4 @@
+import Script from 'next/script';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import ServicesSection from '@/components/ServicesSection';
@@ -6,96 +7,82 @@ import Testimonials from '@/components/Testimonials';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 import Footer from '@/components/Footer';
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'HomeAndConstructionBusiness',
-  name: 'Handy Maison',
-  image: 'https://handymaison.fr/favicon.png',
-  '@id': 'https://handymaison.fr',
-  url: 'https://handymaison.fr',
-  telephone: '+33753829438',
-  email: 'handymaison.idf@gmail.com',
-  priceRange: '€€',
-  address: {
-    '@type': 'PostalAddress',
-    addressRegion: 'Île-de-France',
-    addressCountry: 'FR',
-  },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: 48.8566,
-    longitude: 2.3522,
-  },
-  areaServed: [
-    {
-      '@type': 'AdministrativeArea',
-      name: 'Île-de-France, France',
-    },
-    {
-      '@type': 'City',
-      name: 'Paris',
-    },
-  ],
-  openingHoursSpecification: [
-    {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: [
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-        'Sunday',
-      ],
-      opens: '08:00',
-      closes: '23:00',
-    },
-  ],
-  makesOffer: [
-    {
-      '@type': 'Offer',
-      itemOffered: {
-        '@type': 'Service',
-        name: 'Home Cleaning & Ironing',
-        description:
-          'Professional house cleaning and clothes ironing services in Île-de-France.',
-      },
-    },
-    {
-      '@type': 'Offer',
-      itemOffered: {
-        '@type': 'Service',
-        name: 'Babysitting & Childcare',
-        description: 'Vetted babysitting and childcare services for families in Paris.',
-      },
-    },
-    {
-      '@type': 'Offer',
-      itemOffered: {
-        '@type': 'Service',
-        name: 'Errands & Grocery Shopping',
-        description: 'Personal errand running, grocery shopping, and household logistics.',
-      },
-    },
-    {
-      '@type': 'Offer',
-      itemOffered: {
-        '@type': 'Service',
-        name: 'Home Cooking & Meal Prep',
-        description: 'Customized meal preparation and home cooking assistance.',
-      },
-    },
-  ],
-};
-
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col bg-bgWarm">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <Script id="local-business-schema" type="application/ld+json" strategy="afterInteractive">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          "name": "Handy Maison",
+          "url": "https://handymaison.fr",
+          "description": "Premium domestic services in Paris and Île-de-France combining cleaning, ironing, cooking, shopping, and babysitting into customized itineraries.",
+          "areaServed": {
+            "@type": "State",
+            "name": "Île-de-France"
+          },
+          "openingHoursSpecification": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday"
+            ],
+            "opens": "08:00",
+            "closes": "23:00"
+          },
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Services à Domicile / Home Services",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Ménage / House Cleaning",
+                  "description": "Professional home cleaning and tidying services."
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Repassage / Ironing",
+                  "description": "Expert clothing care and ironing services at home."
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Garde d'enfants / Babysitting",
+                  "description": "Trusted and flexible childcare and babysitting services."
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Cuisine / In-Home Cooking",
+                  "description": "Customized meal preparation and daily cooking services."
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Courses / Shopping & Errands",
+                  "description": "Grocery shopping and personal errand running."
+                }
+              }
+            ]
+          }
+        })}
+      </Script>
       <Header />
       <Hero />
       <ServicesSection />
