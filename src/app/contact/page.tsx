@@ -38,7 +38,7 @@ export default function ContactPage() {
       <div className="bg-primary text-white pt-12 pb-10 border-b border-primary-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl space-y-3">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-light block">
-            {lang === 'fr' ? 'Assistance & Contact' : 'Support & Contact'}
+            SUPPORT &amp; CONTACT
           </span>
           <h1 className="font-heading text-3xl sm:text-4xl font-bold">
             {lang === 'fr'
@@ -128,7 +128,9 @@ export default function ContactPage() {
                 <h3 className="font-heading font-bold text-base text-primary">
                   {lang === 'fr' ? 'Zone d\'Intervention' : 'Coverage Area'}
                 </h3>
-                <p className="text-sm font-semibold text-charcoal">Région Île-de-France</p>
+                <p className="text-sm font-semibold text-charcoal">
+                  {lang === 'fr' ? 'Région Île-de-France' : 'Île-de-France Region'}
+                </p>
                 <p className="text-xs text-charcoal-muted">
                   {lang === 'fr'
                     ? 'Interventions à domicile dans toute la région Île-de-France'
