@@ -20,25 +20,19 @@ export default function AdminLoginPage() {
     setErrorMsg('');
 
     try {
-      // 1. Attempt Supabase Auth login
+      // Attempt Supabase Auth login
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
-        // Fallback for administrative credential check
-        if (email.trim().toLowerCase() === 'admin@handymaison.fr' && password === 'handy2026admin') {
-          document.cookie = `handy_admin_session=active; path=/; max-age=${60 * 60 * 24}`;
-          router.push('/admin');
-          return;
-        }
         throw new Error(error.message || 'Invalid administrator credentials');
       }
 
       if (data?.session) {
-        document.cookie = `handy_admin_session=active; path=/; max-age=${60 * 60 * 24}`;
         router.push('/admin');
+        router.refresh();
       } else {
         throw new Error('Authentication session error');
       }
@@ -98,7 +92,7 @@ export default function AdminLoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@handymaison.fr"
+              placeholder="handymaison.idf@gmail.com"
               className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium"
             />
           </div>
