@@ -139,7 +139,7 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
               </label>
               <select
                 value={durationHours}
-                onChange={(e) => setDurationHours(Number(e.target.value))}
+                onChange={(e) => setDurationHours(parseInt(e.target.value, 10))}
                 className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium bg-white"
               >
                 <option value={2}>{getHoursText(2)}</option>

@@ -94,11 +94,16 @@ export default function Footer() {
               Contact
             </h4>
             <div className="space-y-2 text-xs text-white/80">
-              <div className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-accent-light shrink-0" />
-                <a href="tel:+33753829438" className="hover:underline transition-all">
-                  +33 7 53 82 94 38
-                </a>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Phone className="w-3.5 h-3.5 text-accent-light shrink-0" />
+                  <a href="tel:+33753829438" className="hover:underline transition-all font-medium">
+                    +33 7 53 82 94 38
+                  </a>
+                </div>
+                <p className="text-[11px] text-white/50 pl-5.5">
+                  {lang === 'fr' ? 'Du lundi au dimanche (8h00 - 23h00)' : 'Monday to Sunday (8:00 AM - 11:00 PM)'}
+                </p>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-accent-light shrink-0" />

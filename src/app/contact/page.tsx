@@ -9,7 +9,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Mail, Phone, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
 
 export default function ContactPage() {
-  const { lang } = useLanguage();
+  const { lang, dict } = useLanguage();
 
   const [feedbackName, setFeedbackName] = useState('');
   const [feedbackEmail, setFeedbackEmail] = useState('');
@@ -38,7 +38,7 @@ export default function ContactPage() {
       <div className="bg-primary text-white pt-12 pb-10 border-b border-primary-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl space-y-3">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-light block">
-            SUPPORT &amp; CONTACT
+            {dict.contact.heroEyebrow}
           </span>
           <h1 className="font-heading text-3xl sm:text-4xl font-bold">
             {lang === 'fr'
@@ -71,7 +71,7 @@ export default function ContactPage() {
                   +33 7 53 82 94 38
                 </a>
                 <p className="text-xs text-charcoal-muted">
-                  {lang === 'fr' ? 'Du lundi au dimanche (8h-20h)' : 'Monday to Sunday (8am - 8pm)'}
+                  {dict.contact.cardPhoneHours}
                 </p>
               </div>
             </div>
@@ -139,9 +139,7 @@ export default function ContactPage() {
                 {lang === 'fr' ? 'Une question ou une remarque ?' : 'Send Us a Message or Feedback'}
               </h2>
               <p className="text-xs sm:text-sm text-charcoal-muted max-w-xl mx-auto">
-                {lang === 'fr'
-                  ? 'Pour toute demande d\'information générale, suggestion ou retour d\'expérience, écrivez-nous ci-dessous. Notre équipe vous répondra dans les plus brefs délais.'
-                  : 'For general inquiries, feedback, or suggestions, send us a message below. Our support team will get back to you promptly.'}
+                {dict.contact.formSubtitle}
               </p>
             </div>
 
