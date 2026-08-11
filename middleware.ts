@@ -1,26 +1,54 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { createServerClient } from '@supabase/ssr';
+import { NextResponse, type NextRequest } from 'next/server';
 
-export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+export async function middleware(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({
+    request,
+  });
 
-  // Protect /admin routes (except /admin/login)
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet: Array<{ name: string; value: string; options?: any }>) {
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value)
+          );
+          supabaseResponse = NextResponse.next({
+            request,
+          });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set({ name, value, ...options })
+          );
+        },
+      },
+    }
+  );
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { pathname } = request.nextUrl;
+
+  // Protect all /admin pages EXCEPT the login page itself
   if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
-    // Check for Supabase auth cookie or auth token in cookies
-    const allCookies = req.cookies.getAll();
-    const hasAuthCookie = allCookies.some(
-      (c) => c.name.includes('auth-token') || c.name.includes('sb-') || c.name === 'handy_admin_session'
-    );
-
-    if (!hasAuthCookie) {
-      const loginUrl = new URL('/admin/login', req.url);
+    // If there is no user, OR the user is NOT Joy, kick them to the login screen
+    if (!user || user.email !== 'handymaison.idf@gmail.com') {
+      const loginUrl = new URL('/admin/login', request.url);
       return NextResponse.redirect(loginUrl);
     }
   }
 
-  return NextResponse.next();
+  return supabaseResponse;
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
 };
