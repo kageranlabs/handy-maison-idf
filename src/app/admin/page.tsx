@@ -30,9 +30,17 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'all' | 'pending_hold' | 'captured' | 'declined'>('all');
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
 
-  const fetchBookings = async () => {
+  const checkAuthAndFetchBookings = async () => {
     setLoading(true);
     try {
+      // Enforce client-side Supabase authentication & admin email authorization
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+      if (authError || !user || user.email !== 'handymaison.idf@gmail.com') {
+        router.push('/admin/login');
+        return;
+      }
+
       const { data, error } = await supabase
         .from('bookings')
         .select('*, slots:booking_slots(*)')
@@ -45,13 +53,14 @@ export default function AdminDashboard() {
       }
     } catch (e) {
       console.error('Failed to query bookings:', e);
+      router.push('/admin/login');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchBookings();
+    checkAuthAndFetchBookings();
   }, []);
 
   const handleSignOut = async () => {
@@ -61,7 +70,8 @@ export default function AdminDashboard() {
       console.error('Sign out error:', e);
     }
     document.cookie = 'handy_admin_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
-    router.push('/');
+    router.push('/admin/login');
+    router.refresh();
   };
 
   const handleAccept = async (id: string) => {
@@ -183,7 +193,7 @@ export default function AdminDashboard() {
             {/* Mobile Header Actions */}
             <div className="flex items-center gap-2 sm:hidden">
               <button
-                onClick={fetchBookings}
+                onClick={checkAuthAndFetchBookings}
                 disabled={loading}
                 className="p-2 rounded-xl bg-white/10 text-white hover:bg-white/20"
                 title="Refresh"
@@ -204,7 +214,7 @@ export default function AdminDashboard() {
           {/* Desktop Header Actions */}
           <div className="hidden sm:flex items-center gap-3">
             <button
-              onClick={fetchBookings}
+              onClick={checkAuthAndFetchBookings}
               disabled={loading}
               className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-all"
             >
