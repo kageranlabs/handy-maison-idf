@@ -34,13 +34,16 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
 
   if (!service) return null;
 
-  const hourlyRate = service.hourlyRate;
-  const subtotal = durationHours * hourlyRate;
+  const hourlyRate = Number(service.hourlyRate) || 0;
+  const numDuration = Number(durationHours) || 2;
+  const subtotal = numDuration * hourlyRate;
 
-  // Calculate end time
-  const [startH, startM] = startTime.split(':').map(Number);
-  const endH = startH + durationHours;
-  const endTime = `${endH < 10 ? '0' : ''}${endH}:${startM < 10 ? '0' : ''}${startM}`;
+  // Dynamically calculate end time from startTime + numDuration
+  const [startH, startM] = (startTime || '09:00').split(':').map((v) => parseInt(v, 10) || 0);
+  const endH = startH + numDuration;
+  const formattedEndH = endH < 10 ? `0${endH}` : `${endH}`;
+  const formattedStartM = startM < 10 ? `0${startM}` : `${startM}`;
+  const endTime = `${formattedEndH}:${formattedStartM}`;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,7 +170,7 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
                 {lang === 'fr' ? 'Créneau calculé :' : 'Calculated slot:'}
               </span>
               <span className="font-semibold text-primary">
-                {startTime} - {endTime} ({durationHours}h)
+                {startTime} - {endTime} ({numDuration}h)
               </span>
             </div>
             <div className="text-right">
