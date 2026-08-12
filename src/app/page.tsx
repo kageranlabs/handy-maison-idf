@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect } from 'react';
 import Script from 'next/script';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
@@ -8,6 +11,12 @@ import { WhatsAppButton } from '@/components/WhatsAppButton';
 import Footer from '@/components/Footer';
 
 export default function Home() {
+  useEffect(() => {
+    if (window.location.hash.includes('access_token=') && window.location.hash.includes('type=invite')) {
+      window.location.href = '/admin/set-password' + window.location.hash;
+    }
+  }, []);
+
   return (
     <main className="min-h-screen flex flex-col bg-bgWarm">
       <Script id="local-business-schema" type="application/ld+json" strategy="afterInteractive">
