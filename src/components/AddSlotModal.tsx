@@ -24,14 +24,6 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
   const [startTime, setStartTime] = useState<string>('09:00');
   const [durationHours, setDurationHours] = useState<number>(2);
 
-  React.useEffect(() => {
-    if (service) {
-      setDurationHours(2);
-      setStartTime('09:00');
-      setDate(minDateStr);
-    }
-  }, [service?.id]);
-
   if (!service) return null;
 
   const hourlyRate = Number(service.hourlyRate) || 0;
