@@ -30,15 +30,17 @@ export async function middleware(request: NextRequest) {
   );
 
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  const user = session?.user;
 
   const { pathname } = request.nextUrl;
 
   // Protect all /admin pages EXCEPT the login and set-password pages
   if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login') && !pathname.startsWith('/admin/set-password')) {
-    // If there is no user, OR the user is NOT Joy, kick them to the login screen
-    if (!user || user.email !== 'handymaison.idf@gmail.com') {
+    // If there is no session/user, OR the user is NOT Joy, kick them to the login screen
+    if (!session || !user || user.email !== 'handymaison.idf@gmail.com') {
       const loginUrl = new URL('/admin/login', request.url);
       return NextResponse.redirect(loginUrl);
     }
