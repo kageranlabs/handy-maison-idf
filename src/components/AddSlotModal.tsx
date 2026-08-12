@@ -22,7 +22,7 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
 
   const [date, setDate] = useState<string>(minDateStr);
   const [startTime, setStartTime] = useState<string>('09:00');
-  const [durationHours, setDurationHours] = useState<number>(2); // Minimum 2 hours enforced
+  const [durationHours, setDurationHours] = useState<number>(2);
 
   React.useEffect(() => {
     if (service) {
@@ -116,7 +116,7 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
             />
           </div>
 
-          {/* Start Time */}
+          {/* Start Time & Duration */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-charcoal mb-1.5 flex items-center gap-1.5">
@@ -142,7 +142,6 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
               </select>
             </div>
 
-            {/* Duration (Minimum 2 Hours Enforced) */}
             <div>
               <label className="block text-xs font-semibold text-charcoal mb-1.5 flex items-center gap-1.5">
                 <Clock className="w-4 h-4 text-primary" />
@@ -163,14 +162,14 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
             </div>
           </div>
 
-          {/* Time Slot Summary Box */}
+          {/* Time Slot Summary Box (Now fully dynamic) */}
           <div className="p-4 rounded-2xl bg-bgWarm border border-gray-200/80 flex items-center justify-between text-sm">
             <div>
               <span className="text-xs text-charcoal-muted block">
                 {lang === 'fr' ? 'Créneau calculé :' : 'Calculated slot:'}
               </span>
               <span className="font-semibold text-primary">
-                {startTime} - {endTime} ({numDuration}h)
+                {startTime} - {endTime} ({numDuration} {lang === 'fr' ? 'heures' : 'hours'})
               </span>
             </div>
             <div className="text-right">
