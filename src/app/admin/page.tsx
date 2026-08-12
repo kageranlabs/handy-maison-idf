@@ -72,7 +72,15 @@ export default function AdminDashboard() {
       const res = await fetch(`/api/admin/bookings/${id}/accept`, {
         method: 'POST',
       });
-      const data = await res.json();
+      let data: any = {};
+      const contentType = res.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        data = { error: text || `Server error (${res.status})` };
+      }
+
       if (res.ok && data.success) {
         setBookings((prev) =>
           prev.map((b) => (b.id === id ? { ...b, status: 'captured' } : b))
@@ -94,7 +102,15 @@ export default function AdminDashboard() {
       const res = await fetch(`/api/admin/bookings/${id}/decline`, {
         method: 'POST',
       });
-      const data = await res.json();
+      let data: any = {};
+      const contentType = res.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        data = { error: text || `Server error (${res.status})` };
+      }
+
       if (res.ok && data.success) {
         setBookings((prev) =>
           prev.map((b) => (b.id === id ? { ...b, status: 'declined' } : b))
