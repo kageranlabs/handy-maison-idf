@@ -154,20 +154,20 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
             </div>
           </div>
 
-          {/* Time Slot Summary Box (Now fully dynamic) */}
+          {/* Time Slot Summary Box (Defensive DOM isolation for browser translation extensions) */}
           <div className="p-4 rounded-2xl bg-bgWarm border border-gray-200/80 flex items-center justify-between text-sm">
             <div>
               <span className="text-xs text-charcoal-muted block">
                 {lang === 'fr' ? 'Créneau calculé :' : 'Calculated slot:'}
               </span>
               <span className="font-semibold text-primary">
-                {startTime} - {endTime} ({numDuration} {lang === 'fr' ? 'heures' : 'hours'})
+                <span>{startTime}</span> - <span>{endTime}</span> (<span>{numDuration}</span> {lang === 'fr' ? 'heures' : 'hours'})
               </span>
             </div>
             <div className="text-right">
               <span className="text-xs text-charcoal-muted block">{dict.servicesSection.subtotalLabel} :</span>
               <span className="font-heading font-bold text-lg text-primary">
-                {subtotal} €
+                <span>{subtotal}</span> €
               </span>
             </div>
           </div>
