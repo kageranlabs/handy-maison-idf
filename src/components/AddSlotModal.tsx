@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ServiceDefinition } from '@/lib/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { useItinerary } from '@/context/ItineraryContext';
@@ -24,6 +24,17 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
   const [startTime, setStartTime] = useState<string>('09:00');
   const [durationHours, setDurationHours] = useState<number>(2);
 
+  // Compute start hour and max available hours so end time never exceeds 23:00 operating limit
+  const [startH, startM] = (startTime || '09:00').split(':').map((v) => parseInt(v, 10) || 0);
+  const maxAvailableHours = Math.min(8, Math.max(2, 23 - startH));
+
+  // Auto-clamp durationHours if startTime is changed to a late hour that exceeds 23:00 operating time
+  useEffect(() => {
+    if (durationHours > maxAvailableHours) {
+      setDurationHours(maxAvailableHours);
+    }
+  }, [startTime, maxAvailableHours, durationHours]);
+
   if (!service) return null;
 
   const hourlyRate = Number(service.hourlyRate) || 0;
@@ -31,7 +42,6 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
   const subtotal = numDuration * hourlyRate;
 
   // Dynamically calculate end time from startTime + numDuration
-  const [startH, startM] = (startTime || '09:00').split(':').map((v) => parseInt(v, 10) || 0);
   const endH = startH + numDuration;
   const formattedEndH = endH < 10 ? `0${endH}` : `${endH}`;
   const formattedStartM = startM < 10 ? `0${startM}` : `${startM}`;
@@ -45,7 +55,7 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
       date,
       startTime,
       endTime,
-      durationHours,
+      durationHours: numDuration,
       hourlyRate,
       subtotal,
     });
@@ -63,6 +73,13 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
       return `${h} hours`;
     }
   };
+
+  const startTimes = [
+    '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00',
+    '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'
+  ];
+
+  const durationOptions = [2, 3, 4, 5, 6, 8].filter((h) => h <= maxAvailableHours);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
@@ -120,17 +137,9 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
                 onChange={(e) => setStartTime(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium bg-white"
               >
-                <option value="08:00">08:00</option>
-                <option value="09:00">09:00</option>
-                <option value="10:00">10:00</option>
-                <option value="11:00">11:00</option>
-                <option value="12:00">12:00</option>
-                <option value="13:00">13:00</option>
-                <option value="14:00">14:00</option>
-                <option value="15:00">15:00</option>
-                <option value="16:00">16:00</option>
-                <option value="17:00">17:00</option>
-                <option value="18:00">18:00</option>
+                {startTimes.map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
               </select>
             </div>
 
@@ -144,12 +153,11 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
                 onChange={(e) => setDurationHours(Number(e.target.value))}
                 className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium bg-white"
               >
-                <option value="2">{getHoursText(2)}</option>
-                <option value="3">{getHoursText(3)}</option>
-                <option value="4">{getHoursText(4)}</option>
-                <option value="5">{getHoursText(5)}</option>
-                <option value="6">{getHoursText(6)}</option>
-                <option value="8">{getHoursText(8)}</option>
+                {durationOptions.map((h) => (
+                  <option key={h} value={String(h)}>
+                    {getHoursText(h)}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
