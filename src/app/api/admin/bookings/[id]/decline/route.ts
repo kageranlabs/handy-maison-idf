@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { supabase } from '@/lib/supabase/client';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -10,11 +10,22 @@ export async function POST(
   { params }: { params: any }
 ) {
   try {
+    // Safety check before parsing JSON if body is present
+    let body = {};
+    const contentLength = req.headers.get('content-length');
+    if (contentLength && contentLength !== '0') {
+      try {
+        body = await req.json();
+      } catch (e) {
+        console.warn('Empty or invalid body in decline booking POST request');
+      }
+    }
+
     const resolvedParams = await params;
     const bookingId = resolvedParams?.id || params?.id;
 
     // Fetch booking record
-    const { data: booking, error: fetchError } = await supabase
+    const { data: booking, error: fetchError } = await supabaseAdmin
       .from('bookings')
       .select('*')
       .eq('id', bookingId)
@@ -34,7 +45,7 @@ export async function POST(
     }
 
     // Update status in Supabase
-    const { data: updated, error: updateError } = await supabase
+    const { data: updated, error: updateError } = await supabaseAdmin
       .from('bookings')
       .update({ status: 'declined' })
       .eq('id', bookingId)
