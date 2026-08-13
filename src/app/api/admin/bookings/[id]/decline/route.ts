@@ -36,7 +36,7 @@ export async function POST(
     }
 
     // Cancel the Stripe PaymentIntent hold if available
-    if (booking.stripe_payment_intent_id) {
+    if (booking.stripe_payment_intent_id && booking.stripe_payment_intent_id.trim() !== '') {
       try {
         await stripe.paymentIntents.cancel(booking.stripe_payment_intent_id);
       } catch (stripeErr: any) {
