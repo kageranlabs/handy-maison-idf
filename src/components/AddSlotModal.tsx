@@ -135,10 +135,13 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
               <select
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium bg-white"
+                translate="no"
+                className="notranslate w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium bg-white"
               >
                 {startTimes.map((t) => (
-                  <option key={t} value={t}>{t}</option>
+                  <option key={t} value={t} translate="no" className="notranslate">
+                    {t}
+                  </option>
                 ))}
               </select>
             </div>
@@ -168,13 +171,13 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
               <span className="text-xs text-charcoal-muted block">
                 {lang === 'fr' ? 'Créneau calculé :' : 'Calculated slot:'}
               </span>
-              <span className="font-semibold text-primary">
-                <span>{startTime}</span> - <span>{endTime}</span> (<span>{numDuration}</span> {lang === 'fr' ? 'heures' : 'hours'})
+              <span translate="no" className="notranslate font-semibold text-primary">
+                <span>{startTime}</span> - <span>{endTime}</span> (<span>{numDuration}</span> <span translate="yes">{lang === 'fr' ? 'heures' : 'hours'}</span>)
               </span>
             </div>
             <div className="text-right">
               <span className="text-xs text-charcoal-muted block">{dict.servicesSection.subtotalLabel} :</span>
-              <span className="font-heading font-bold text-lg text-primary">
+              <span translate="no" className="notranslate font-heading font-bold text-lg text-primary">
                 <span>{subtotal}</span> €
               </span>
             </div>
