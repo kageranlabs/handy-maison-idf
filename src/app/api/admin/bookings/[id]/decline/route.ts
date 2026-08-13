@@ -56,6 +56,42 @@ export async function POST(
       return NextResponse.json({ error: 'Failed to update booking status' }, { status: 500 });
     }
 
+    // Send cancellation email via Resend
+    if (updated.customer_email) {
+      const emailHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #f0f0f0; border-radius: 8px;">
+          <h2 style="color: #c0392b;">Demande de réservation refusée</h2>
+          <p>Bonjour ${updated.customer_name},</p>
+          <p>Nous sommes au regret de vous informer que nous ne pouvons pas honorer votre demande de réservation aux créneaux sélectionnés.</p>
+          <p>L'empreinte bancaire et l'autorisation de paiement de <strong>${updated.total_amount} €</strong> ont été annulées et libérées. Aucun montant n'a été prélevé.</p>
+          <p>Nous vous invitons à planifier de nouveaux créneaux sur notre site ou à nous contacter sur WhatsApp au <strong>+33 7 53 82 94 38</strong> pour trouver une solution.</p>
+          <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+          <p style="font-size: 12px; color: #999; text-align: center;">Handy Maison Île-de-France</p>
+        </div>
+      `;
+      
+      const apiKey = process.env.RESEND_API_KEY;
+      if (apiKey) {
+        try {
+          await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({
+              from: 'Handy Maison <noreply@handymaison.fr>',
+              to: [updated.customer_email],
+              subject: 'Mise à jour concernant votre réservation - Handy Maison',
+              html: emailHtml,
+            }),
+          });
+        } catch (mailErr) {
+          console.error('Failed to send Resend email:', mailErr);
+        }
+      }
+    }
+
     return NextResponse.json({ success: true, booking: updated });
 
   } catch (err: any) {
