@@ -1,144 +1,63 @@
-import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase/client';
 
 export const runtime = 'edge';
-export const dynamic = 'force-dynamic';
 
-/**
- * Verify Stripe webhook signature using the Web Crypto API (Edge-native).
- * Stripe signs webhooks with HMAC-SHA256: "t=<timestamp>,v1=<signature>"
- */
-async function verifyStripeSignature(
-  payload: string,
-  sigHeader: string,
-  secret: string
-): Promise<{ verified: boolean; event?: any }> {
-  const parts = sigHeader.split(',');
-  const timestamp = parts.find((p) => p.startsWith('t='))?.slice(2);
-  const signature = parts.find((p) => p.startsWith('v1='))?.slice(3);
+async function verifyStripeSignature(payload: string, signatureHeader: string, secret: string) {
+  try {
+    const pairs = signatureHeader.split(',').map(s => s.split('='));
+    const t = pairs.find(p => p[0] === 't')?.[1];
+    const v1 = pairs.find(p => p[0] === 'v1')?.[1];
+    if (!t || !v1) return false;
 
-  if (!timestamp || !signature) {
-    return { verified: false };
+    const encoder = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      'raw',
+      encoder.encode(secret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['verify']
+    );
+
+    const signedPayload = encoder.encode(`${t}.${payload}`);
+    const signatureBytes = new Uint8Array(v1.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)));
+
+    return await crypto.subtle.verify('HMAC', key, signatureBytes, signedPayload);
+  } catch (e) {
+    return false;
   }
-
-  // Stripe signs: "<timestamp>.<payload>"
-  const signedPayload = `${timestamp}.${payload}`;
-  const encoder = new TextEncoder();
-
-  const key = await crypto.subtle.importKey(
-    'raw',
-    encoder.encode(secret),
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign']
-  );
-
-  const signatureBytes = await crypto.subtle.sign(
-    'HMAC',
-    key,
-    encoder.encode(signedPayload)
-  );
-
-  // Convert to hex
-  const expectedSignature = Array.from(new Uint8Array(signatureBytes))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
-
-  // Timing-safe comparison: compare all chars even on mismatch
-  if (expectedSignature.length !== signature.length) {
-    return { verified: false };
-  }
-  let mismatch = 0;
-  for (let i = 0; i < expectedSignature.length; i++) {
-    mismatch |= expectedSignature.charCodeAt(i) ^ signature.charCodeAt(i);
-  }
-
-  if (mismatch !== 0) {
-    return { verified: false };
-  }
-
-  // Reject if timestamp is older than 5 minutes (tolerance window)
-  const now = Math.floor(Date.now() / 1000);
-  if (Math.abs(now - parseInt(timestamp, 10)) > 300) {
-    return { verified: false };
-  }
-
-  return { verified: true, event: JSON.parse(payload) };
 }
 
-export async function POST(req: Request) {
-  const body = await req.text();
-  const signature = req.headers.get('stripe-signature') || '';
-
-  let event;
-
+export async function POST(req: NextRequest) {
   try {
+    const body = await req.text();
+    const signature = req.headers.get('stripe-signature') || '';
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
     if (webhookSecret) {
-      const result = await verifyStripeSignature(body, signature, webhookSecret);
-      if (!result.verified) {
-        return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+      const isValid = await verifyStripeSignature(body, signature, webhookSecret);
+      if (!isValid) {
+        return NextResponse.json({ error: "Invalid webhook signature" }, { status: 400 });
       }
-      event = result.event;
-    } else {
-      // Fallback for development without webhook secret
-      event = JSON.parse(body);
     }
+
+    const event = JSON.parse(body);
+
+    switch (event.type) {
+      case 'payment_intent.requires_capture':
+        await supabase.from('bookings').update({ status: 'pending_hold' }).eq('stripe_payment_intent_id', event.data.object.id);
+        break;
+      case 'payment_intent.succeeded':
+        await supabase.from('bookings').update({ status: 'captured' }).eq('stripe_payment_intent_id', event.data.object.id);
+        break;
+      case 'payment_intent.canceled':
+        await supabase.from('bookings').update({ status: 'declined' }).eq('stripe_payment_intent_id', event.data.object.id);
+        break;
+    }
+
+    return NextResponse.json({ received: true });
   } catch (err: any) {
-    console.error('Stripe webhook signature error:', err.message);
-    return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
+    console.error('Webhook processing error:', err.message);
+    return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 });
   }
-
-  // Lazy instantiate Supabase admin client inside POST
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://qtdzzqywftsirghlpzsc.supabase.co';
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || '';
-  const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
-  });
-
-  // Handle specific Stripe events
-  switch (event.type) {
-    case 'payment_intent.requires_capture': {
-      const paymentIntent = event.data.object;
-      console.log(`PaymentIntent ${paymentIntent.id} authorized and requires capture (manual hold active).`);
-      
-      // Sync Supabase status if needed
-      await supabaseAdmin
-        .from('bookings')
-        .update({ status: 'pending_hold' })
-        .eq('stripe_payment_intent_id', paymentIntent.id);
-      break;
-    }
-
-    case 'payment_intent.succeeded': {
-      const paymentIntent = event.data.object;
-      console.log(`PaymentIntent ${paymentIntent.id} captured successfully.`);
-      
-      // Update Supabase status to captured
-      await supabaseAdmin
-        .from('bookings')
-        .update({ status: 'captured' })
-        .eq('stripe_payment_intent_id', paymentIntent.id);
-      break;
-    }
-
-    case 'payment_intent.canceled': {
-      const paymentIntent = event.data.object;
-      console.log(`PaymentIntent ${paymentIntent.id} canceled.`);
-
-      await supabaseAdmin
-        .from('bookings')
-        .update({ status: 'declined' })
-        .eq('stripe_payment_intent_id', paymentIntent.id);
-      break;
-    }
-
-    default:
-      console.log(`Unhandled Stripe event type ${event.type}`);
-  }
-
-  return NextResponse.json({ received: true });
 }
