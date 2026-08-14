@@ -39,8 +39,10 @@ export async function middleware(request: NextRequest) {
 
   // Protect all /admin pages EXCEPT the login and set-password pages
   if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login') && !pathname.startsWith('/admin/set-password')) {
-    // If there is no session/user, OR the user is NOT Joy, kick them to the login screen
-    if (!session || !user || user.email !== 'handymaison.idf@gmail.com') {
+    const allowedAdmins = ['handymaison.idf@gmail.com', 'kageranlabs@gmail.com'];
+    
+    // If there is no session/user, OR the user's email is NOT in the allowed list, kick them to the login screen
+    if (!session || !user || !user.email || !allowedAdmins.includes(user.email)) {
       const loginUrl = new URL('/admin/login', request.url);
       return NextResponse.redirect(loginUrl);
     }
