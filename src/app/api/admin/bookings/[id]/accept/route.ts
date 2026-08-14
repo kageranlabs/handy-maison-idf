@@ -1,15 +1,31 @@
-import { NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
-import { supabaseAdmin } from '@/lib/supabase/admin';
-
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
+
+import { NextResponse } from 'next/server';
+import Stripe from 'stripe';
+import { createClient } from '@supabase/supabase-js';
 
 export async function POST(
   req: Request,
   { params }: { params: any }
 ) {
   try {
+    // Lazy instantiate Stripe client inside POST to guarantee process.env context is active
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+      apiVersion: '2025-01-27.acacia' as any,
+      httpClient: Stripe.createFetchHttpClient(),
+    });
+
+    // Lazy instantiate Supabase admin client inside POST
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://qtdzzqywftsirghlpzsc.supabase.co';
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || '';
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    });
+
     // Safety check before parsing JSON if body is present
     let body = {};
     const contentLength = req.headers.get('content-length');

@@ -2,12 +2,23 @@ export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 import { NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
-import { supabase } from '@/lib/supabase/client';
+import Stripe from 'stripe';
+import { createClient } from '@supabase/supabase-js';
 import { BookingSlotItem, CustomerDetails } from '@/lib/types';
 
 export async function POST(req: Request) {
   try {
+    // 1. Lazy instantiate Stripe client inside POST to guarantee process.env context is active
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+      apiVersion: '2025-01-27.acacia' as any,
+      httpClient: Stripe.createFetchHttpClient(),
+    });
+
+    // 2. Lazy instantiate Supabase client inside POST
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://qtdzzqywftsirghlpzsc.supabase.co';
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_nbPnc2oCUc6yqWAdfsiEqA_lwZwL1H5';
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
     let body;
     try {
       body = await req.json();
@@ -29,7 +40,7 @@ export async function POST(req: Request) {
     const totalAmountEur = slots.reduce((acc, slot) => acc + slot.subtotal, 0);
     const amountInCents = Math.round(totalAmountEur * 100);
 
-    // 1. Create Stripe PaymentIntent with capture_method: 'manual'
+    // Create Stripe PaymentIntent with capture_method: 'manual'
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountInCents,
       currency: 'eur',
@@ -44,7 +55,7 @@ export async function POST(req: Request) {
       },
     });
 
-    // 2. Insert parent booking record into Supabase
+    // Insert parent booking record into Supabase
     const { data: booking, error: bookingError } = await supabase
       .from('bookings')
       .insert({
@@ -68,7 +79,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Failed to record booking in database' }, { status: 500 });
     }
 
-    // 3. Insert child booking slots into Supabase
+    // Insert child booking slots into Supabase
     const slotRecords = slots.map((slot) => ({
       booking_id: booking.id,
       service_type: slot.serviceTypeId,
