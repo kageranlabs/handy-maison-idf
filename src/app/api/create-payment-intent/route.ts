@@ -1,14 +1,20 @@
+export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { supabase } from '@/lib/supabase/client';
 import { BookingSlotItem, CustomerDetails } from '@/lib/types';
 
-export const runtime = 'edge';
-export const dynamic = 'force-dynamic';
-
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    let body;
+    try {
+      body = await req.json();
+    } catch (parseError) {
+      return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    }
+
     const { slots, customer }: { slots: BookingSlotItem[]; customer: CustomerDetails } = body;
 
     if (!slots || slots.length === 0) {
@@ -89,8 +95,8 @@ export async function POST(req: Request) {
       bookingId: booking.id,
     });
 
-  } catch (err: any) {
-    console.error('Create PaymentIntent API Error:', err);
-    return NextResponse.json({ error: err.message || 'Internal Server Error' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Create PaymentIntent API Error:', error);
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Payment intent failed" }, { status: 500 });
   }
 }
