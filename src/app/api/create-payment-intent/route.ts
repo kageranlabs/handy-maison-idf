@@ -7,11 +7,16 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const amount = body.amount || 10000;
     const currency = body.currency || 'eur';
+    const secret = process.env.STRIPE_SECRET_KEY;
+
+    if (!secret) {
+      return NextResponse.json({ error: "Stripe key not configured" }, { status: 500 });
+    }
 
     const response = await fetch('https://api.stripe.com/v1/payment_intents', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.STRIPE_SECRET_KEY}`,
+        'Authorization': `Bearer ${secret}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: new URLSearchParams({
