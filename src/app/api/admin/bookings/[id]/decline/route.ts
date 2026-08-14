@@ -2,7 +2,6 @@ export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 import { NextResponse } from 'next/server';
-import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
 export async function POST(
@@ -10,12 +9,6 @@ export async function POST(
   { params }: { params: any }
 ) {
   try {
-    // Lazy instantiate Stripe client inside POST to guarantee process.env context is active
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-      apiVersion: '2025-01-27.acacia' as any,
-      httpClient: Stripe.createFetchHttpClient(),
-    });
-
     // Lazy instantiate Supabase admin client inside POST
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://qtdzzqywftsirghlpzsc.supabase.co';
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || '';
@@ -53,10 +46,17 @@ export async function POST(
 
     // Cancel the Stripe PaymentIntent hold if available
     if (booking.stripe_payment_intent_id && booking.stripe_payment_intent_id.trim() !== '') {
-      try {
-        await stripe.paymentIntents.cancel(booking.stripe_payment_intent_id);
-      } catch (stripeErr: any) {
-        console.warn('Stripe cancel warning (might already be canceled or in test mode):', stripeErr.message);
+      const stripeResponse = await fetch(`https://api.stripe.com/v1/payment_intents/${booking.stripe_payment_intent_id}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.STRIPE_SECRET_KEY}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      if (!stripeResponse.ok) {
+        const errorData = await stripeResponse.json();
+        console.error("Stripe Cancel Error:", errorData);
+        throw new Error("Failed to cancel payment in Stripe.");
       }
     }
 
