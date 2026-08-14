@@ -1,17 +1,13 @@
+export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from 'next/server';
-import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { BookingSlotItem, CustomerDetails } from '@/lib/types';
 
 export async function POST(req: Request) {
   try {
-    // 1. Lazy instantiate Stripe client inside POST to guarantee process.env context is active
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-      apiVersion: '2025-01-27.acacia' as any,
-      httpClient: Stripe.createFetchHttpClient(),
-    });
-
-    // 2. Lazy instantiate Supabase client inside POST
+    // Lazy instantiate Supabase client inside POST to guarantee process.env context is active
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://qtdzzqywftsirghlpzsc.supabase.co';
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_nbPnc2oCUc6yqWAdfsiEqA_lwZwL1H5';
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -37,20 +33,36 @@ export async function POST(req: Request) {
     const totalAmountEur = slots.reduce((acc, slot) => acc + slot.subtotal, 0);
     const amountInCents = Math.round(totalAmountEur * 100);
 
-    // Create Stripe PaymentIntent with capture_method: 'manual'
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amountInCents,
-      currency: 'eur',
-      capture_method: 'manual', // Enforces pre-authorization hold
-      description: `Handy Maison itinerary (${slots.length} slots) for ${customer.name}`,
-      metadata: {
-        customer_name: customer.name,
-        customer_email: customer.email,
-        customer_phone: customer.phone,
-        service_address: customer.address,
-        job_details: customer.jobDetails.substring(0, 500),
+    // Call Stripe PaymentIntent API via native fetch to prevent Edge polyfill crash
+    const stripeParams = new URLSearchParams();
+    stripeParams.append('amount', String(amountInCents));
+    stripeParams.append('currency', 'eur');
+    stripeParams.append('capture_method', 'manual');
+    stripeParams.append('description', `Handy Maison itinerary (${slots.length} slots) for ${customer.name}`);
+    stripeParams.append('metadata[customer_name]', customer.name);
+    stripeParams.append('metadata[customer_email]', customer.email);
+    if (customer.phone) {
+      stripeParams.append('metadata[customer_phone]', customer.phone);
+    }
+    stripeParams.append('metadata[service_address]', customer.address);
+    stripeParams.append('metadata[job_details]', customer.jobDetails.substring(0, 500));
+
+    const stripeRes = await fetch('https://api.stripe.com/v1/payment_intents', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.STRIPE_SECRET_KEY || ''}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
+      body: stripeParams.toString(),
     });
+
+    if (!stripeRes.ok) {
+      const stripeErr = await stripeRes.json();
+      console.error('Stripe API HTTP error response:', stripeErr);
+      throw new Error(stripeErr.error?.message || 'Failed to create payment intent via Stripe API fetch');
+    }
+
+    const paymentIntent = await stripeRes.json();
 
     // Insert parent booking record into Supabase
     const { data: booking, error: bookingError } = await supabase
