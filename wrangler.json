@@ -3,7 +3,14 @@
   "compatibility_date": "2026-08-08",
   "compatibility_flags": ["nodejs_compat"],
   "main": ".vercel/output/static/_worker.js/index.js",
+  "find_additional_modules": true,
   "assets": {
     "directory": ".vercel/output/static"
-  }
+  },
+  "rules": [
+    {
+      "type": "ESModule",
+      "globs": ["**/*.js"]
+    }
+  ]
 }
