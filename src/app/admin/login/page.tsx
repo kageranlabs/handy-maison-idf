@@ -31,8 +31,7 @@ export default function AdminLoginPage() {
       }
 
       if (data?.session) {
-        router.push('/admin');
-        router.refresh();
+        window.location.href = '/admin';
       } else {
         throw new Error('Authentication session error');
       }
