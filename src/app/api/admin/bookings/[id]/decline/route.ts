@@ -96,7 +96,7 @@ export async function POST(
               'Authorization': `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-              from: 'Handy Maison <noreply@handymaison.fr>',
+              from: 'Handy Maison <joy@handymaison.fr>',
               to: [updated.customer_email],
               subject: 'Mise à jour concernant votre réservation - Handy Maison',
               html: emailHtml,

@@ -11,8 +11,8 @@ import { DICTIONARY } from '@/lib/i18n/dict';
 function SuccessContent() {
   const searchParams = useSearchParams();
   const amount = searchParams.get('amount') || '0';
-  const { language } = useLanguage();
-  const dict = DICTIONARY[language];
+  const { lang } = useLanguage();
+  const dict = DICTIONARY[lang];
 
   return (
     <div className="bg-white rounded-3xl p-8 sm:p-10 shadow-card border border-gray-200/80 max-w-lg w-full space-y-6 text-center relative overflow-hidden">
