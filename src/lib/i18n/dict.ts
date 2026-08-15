@@ -23,6 +23,16 @@ export const DICTIONARY = {
       trustItem2: 'Intervenants qualifiés & certifiés',
       trustItem3: 'Minimum 2 heures par créneau',
     },
+    bookHero: {
+      eyebrow: 'Réservation & Itinéraire sur Mesure',
+      title: 'Composez votre journée de services à domicile',
+      description: 'Ajoutez un ou plusieurs créneaux horaires (ménage, repassage, cuisine, courses, babysitting) et autorisez votre pré-autorisation bancaire Stripe (Manual Hold).',
+    },
+    servicesHero: {
+      eyebrow: 'Catalogue Sur Mesure • Île-de-France',
+      title: 'Nos Prestations & Tarifs à Domicile',
+      description: 'Découvrez nos services haut de gamme (ménage, repassage, cuisine, courses, garde d\'enfants). Choisissez vos créneaux et composez un itinéraire personnalisé.',
+    },
     servicesSection: {
       title: 'Nos Prestations à Domicile',
       subtitle: 'Sélectionnez et ajoutez un ou plusieurs créneaux horaires à votre panier d\'intervention.',
@@ -137,6 +147,16 @@ export const DICTIONARY = {
       trustItem1: 'Secure Stripe payment pre-authorization',
       trustItem2: 'Vetted & insured local providers',
       trustItem3: 'Minimum 2-hour duration per slot',
+    },
+    bookHero: {
+      eyebrow: 'Booking & Custom Itinerary',
+      title: 'Create your own day of home services',
+      description: 'Add one or multiple time slots (cleaning, ironing, cooking, shopping, babysitting) and authorize your secure Stripe pre-authorization hold.',
+    },
+    servicesHero: {
+      eyebrow: 'Tailored Catalog • Île-de-France',
+      title: 'Our Premium Home Services & Rates',
+      description: 'Discover our premium services (cleaning, ironing, cooking, shopping, babysitting). Select your time slots and build a customized itinerary.',
     },
     servicesSection: {
       title: 'Our Tailored Home Services',
