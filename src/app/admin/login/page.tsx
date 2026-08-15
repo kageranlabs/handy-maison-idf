@@ -25,6 +25,7 @@ export default function AdminLoginPage() {
         email,
         password,
       });
+      console.error('Login attempt:', { session: data?.session, error: error?.message });
 
       if (error) {
         throw new Error(error.message || 'Invalid administrator credentials');
