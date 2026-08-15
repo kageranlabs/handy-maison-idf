@@ -110,8 +110,8 @@ export default function ContactPage() {
                 <h3 className="font-heading font-bold text-base text-primary">
                   {lang === 'fr' ? 'Email Direct' : 'Direct Email'}
                 </h3>
-                <a href="mailto:handymaison.idf@gmail.com" className="text-sm font-semibold text-charcoal hover:underline block truncate max-w-[180px]">
-                  handymaison.idf@gmail.com
+                <a href="mailto:joy@handymaison.fr" className="text-sm font-semibold text-charcoal hover:underline block truncate max-w-[180px]">
+                  joy@handymaison.fr
                 </a>
                 <p className="text-xs text-charcoal-muted">
                   {lang === 'fr' ? 'Réponse sous 2 heures ouvrées' : 'Response within 2 business hours'}
