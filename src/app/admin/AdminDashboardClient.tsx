@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { Toast } from '@/components/ui/Toast';
 import { BookingRecord, BookingStatus } from '@/lib/types';
 import {
   ShieldCheck,
@@ -29,6 +31,8 @@ export default function AdminDashboardClient() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'all' | 'pending_hold' | 'captured' | 'declined'>('all');
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [confirmModal, setConfirmModal] = useState<{ isOpen: boolean; title: string; message: string; action: 'accept' | 'decline' | null; targetId: string | null; isDestructive: boolean }>({ isOpen: false, title: '', message: '', action: null, targetId: null, isDestructive: false });
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -65,41 +69,36 @@ export default function AdminDashboardClient() {
     router.refresh();
   };
 
-  const handleAccept = async (id: string) => {
-    if (!confirm('Are you sure you want to capture the payment hold for this booking?')) return;
-    setActionLoadingId(id);
-    try {
-      const res = await fetch(`/api/admin/bookings/${id}/accept`, {
-        method: 'POST',
-      });
-      let data: any = {};
-      const contentType = res.headers.get('content-type') || '';
-      if (contentType.includes('application/json')) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        data = { error: text || `Server error (${res.status})` };
-      }
-
-      if (res.ok && data.success) {
-        setBookings((prev) =>
-          prev.map((b) => (b.id === id ? { ...b, status: 'captured' } : b))
-        );
-      } else {
-        alert(data.error || 'Failed to capture booking hold.');
-      }
-    } catch (err: any) {
-      alert(err.message || 'Error occurred while capturing funds.');
-    } finally {
-      setActionLoadingId(null);
-    }
+  const triggerAccept = (id: string) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Capture Funds?',
+      message: 'Are you sure you want to capture the payment hold for this booking?',
+      action: 'accept',
+      targetId: id,
+      isDestructive: false
+    });
   };
 
-  const handleDecline = async (id: string) => {
-    if (!confirm('Are you sure you want to decline and release the payment hold?')) return;
-    setActionLoadingId(id);
+  const triggerDecline = (id: string) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Decline Booking?',
+      message: 'Are you sure you want to decline and release the payment hold?',
+      action: 'decline',
+      targetId: id,
+      isDestructive: true
+    });
+  };
+
+  const executeAction = async () => {
+    const { action, targetId } = confirmModal;
+    setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+    if (!action || !targetId) return;
+
+    setActionLoadingId(targetId);
     try {
-      const res = await fetch(`/api/admin/bookings/${id}/decline`, {
+      const res = await fetch(`/api/admin/bookings/${targetId}/${action}`, {
         method: 'POST',
       });
       let data: any = {};
@@ -113,13 +112,14 @@ export default function AdminDashboardClient() {
 
       if (res.ok && data.success) {
         setBookings((prev) =>
-          prev.map((b) => (b.id === id ? { ...b, status: 'declined' } : b))
+          prev.map((b) => (b.id === targetId ? { ...b, status: action === 'accept' ? 'captured' : 'declined' } : b))
         );
+        setToast({ message: `Booking successfully ${action}ed.`, type: 'success' });
       } else {
-        alert(data.error || 'Failed to decline booking hold.');
+        setToast({ message: data.error || `Failed to ${action} booking hold.`, type: 'error' });
       }
     } catch (err: any) {
-      alert(err.message || 'Error occurred while declining hold.');
+      setToast({ message: err.message || `Error occurred while processing action.`, type: 'error' });
     } finally {
       setActionLoadingId(null);
     }
@@ -402,7 +402,7 @@ export default function AdminDashboardClient() {
                     {b.status === 'pending_hold' && (
                       <div className="grid grid-cols-2 sm:flex items-center gap-2 w-full sm:w-auto">
                         <button
-                          onClick={() => handleAccept(b.id)}
+                          onClick={() => triggerAccept(b.id)}
                           disabled={actionLoadingId === b.id}
                           className="w-full sm:w-auto px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl shadow-md transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
                         >
@@ -411,7 +411,7 @@ export default function AdminDashboardClient() {
                         </button>
 
                         <button
-                          onClick={() => handleDecline(b.id)}
+                          onClick={() => triggerDecline(b.id)}
                           disabled={actionLoadingId === b.id}
                           className="w-full sm:w-auto px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs rounded-xl shadow-md transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
                         >
@@ -476,6 +476,23 @@ export default function AdminDashboardClient() {
         )}
 
       </main>
+
+      {/* Custom UI Feedback */}
+      <ConfirmModal 
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        onConfirm={executeAction}
+        onCancel={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+        isDestructive={confirmModal.isDestructive}
+      />
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
     </div>
   );
 }

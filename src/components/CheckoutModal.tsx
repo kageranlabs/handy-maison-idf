@@ -102,11 +102,11 @@ function CheckoutForm({ onClose }: { onClose: () => void }) {
       }
 
       if (paymentIntent && (paymentIntent.status === 'requires_capture' || paymentIntent.status === 'succeeded')) {
-        setIsSuccess(true);
         clearSlots();
+        window.location.href = `/booking-success?amount=${totalHoldAmount}`;
       } else {
-        setIsSuccess(true);
         clearSlots();
+        window.location.href = `/booking-success?amount=${totalHoldAmount}`;
       }
 
     } catch (err: any) {
@@ -116,30 +116,6 @@ function CheckoutForm({ onClose }: { onClose: () => void }) {
       setLoading(false);
     }
   };
-
-  if (isSuccess) {
-    return (
-      <div className="text-center py-6 space-y-5">
-        <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center animate-bounce">
-          <CheckCircle2 className="w-8 h-8" />
-        </div>
-        <h3 className="font-heading text-xl sm:text-2xl font-bold text-primary">
-          {dict.checkout.successTitle}
-        </h3>
-        <p className="text-xs sm:text-sm text-charcoal-muted max-w-md mx-auto leading-relaxed">
-          {dict.checkout.successMessage}
-          <strong className="text-primary font-bold"> {totalHoldAmount} € </strong>
-          {dict.checkout.successMessage2}
-        </p>
-        <button
-          onClick={onClose}
-          className="w-full py-3 px-6 bg-primary text-white font-semibold text-xs sm:text-sm rounded-xl hover:bg-primary-dark transition-all"
-        >
-          {dict.checkout.closeModal}
-        </button>
-      </div>
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
