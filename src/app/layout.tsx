@@ -4,6 +4,8 @@ import './globals.css';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { ItineraryProvider } from '@/context/ItineraryContext';
 
+import CookieBanner from '@/components/CookieBanner';
+
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
@@ -74,6 +76,7 @@ export default function RootLayout({
         <LanguageProvider>
           <ItineraryProvider>
             {children}
+            <CookieBanner />
           </ItineraryProvider>
         </LanguageProvider>
       </body>

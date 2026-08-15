@@ -125,6 +125,11 @@ export const DICTIONARY = {
       formTitle: 'Une question ou une remarque ?',
       formSubtitle: 'Pour toute demande d\'information générale, suggestion ou retour d\'expérience, écrivez-nous ci-dessous. Nous vous répondrons dans les plus brefs délais.',
     },
+    cookieBanner: {
+      message: 'Nous utilisons des cookies pour améliorer votre expérience, analyser notre trafic et sécuriser vos paiements.',
+      accept: 'Accepter',
+      decline: 'Refuser',
+    },
   },
   en: {
     nav: {
@@ -249,6 +254,11 @@ export const DICTIONARY = {
       formEyebrow: 'Feedback & Inquiries',
       formTitle: 'Send Us a Message or Feedback',
       formSubtitle: 'For general inquiries, feedback, or suggestions, send us a message below. We will get back to you promptly.',
+    },
+    cookieBanner: {
+      message: 'We use cookies to improve your experience, analyze traffic, and secure payments.',
+      accept: 'Accept',
+      decline: 'Decline',
     },
   },
 };
