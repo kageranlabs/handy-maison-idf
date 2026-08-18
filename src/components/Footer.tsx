@@ -121,15 +121,6 @@ export default function Footer() {
           <p>© {new Date().getFullYear()} <span translate="no" className="notranslate">Handy Maison</span>.{' '}{lang === 'fr' ? 'Tous droits réservés.' : 'All rights reserved.'}</p>
           
           <div className="flex items-center gap-4">
-            <Link
-              href="/admin/login"
-              className="inline-flex items-center gap-1 text-[11px] text-white/50 hover:text-white transition-colors hover:underline"
-              title="Portail d'administration"
-            >
-              <Lock className="w-3 h-3" />
-              <span>{lang === 'fr' ? 'Espace Admin' : 'Admin Portal'}</span>
-            </Link>
-            <span className="text-white/20">•</span>
             <p className="text-[11px]">
               {lang === 'fr' ? 'Paiement sécurisé par pré-autorisation Stripe' : 'Secure payment with Stripe pre-authorization'}
             </p>

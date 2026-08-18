@@ -37,20 +37,20 @@ function SuccessContent() {
       <div className="bg-primary/5 rounded-2xl p-5 border border-primary/10 text-left space-y-4">
         <h4 className="text-sm font-semibold text-primary flex items-center gap-2">
           <Clock className="w-4 h-4" />
-          Prochaines étapes / Next Steps
+          {dict.bookingSuccess.nextStepsTitle}
         </h4>
         <ul className="text-xs text-charcoal-muted space-y-3">
           <li className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
-            <span>Notre équipe va examiner votre demande et la disponibilité de nos intervenants.</span>
+            <span>{dict.bookingSuccess.step1}</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
-            <span>Vous recevrez un email de confirmation finale très prochainement.</span>
+            <span>{dict.bookingSuccess.step2}</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
-            <span><strong className="text-charcoal font-semibold">Rappel :</strong> Votre carte n'a pas encore été débitée, il s'agit uniquement d'une empreinte bancaire.</span>
+            <span><strong className="text-charcoal font-semibold">{dict.bookingSuccess.step3Prefix}</strong>{dict.bookingSuccess.step3Text}</span>
           </li>
         </ul>
       </div>
@@ -61,7 +61,7 @@ function SuccessContent() {
           className="w-full py-3.5 px-6 bg-primary text-white font-heading font-bold rounded-xl hover:bg-primary-dark transition-all shadow-md active:scale-98 flex items-center justify-center gap-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Retour à l'accueil</span>
+          <span>{dict.bookingSuccess.backHome}</span>
         </Link>
       </div>
     </div>

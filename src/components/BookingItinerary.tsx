@@ -5,11 +5,11 @@ import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import { useItinerary } from '@/context/ItineraryContext';
 import CheckoutModal from './CheckoutModal';
-import { CalendarDays, Clock, Trash2, ArrowRight, ShieldAlert, Calendar } from 'lucide-react';
+import { CalendarDays, Clock, Trash2, ArrowRight, ShieldAlert, Calendar, CheckCircle2 } from 'lucide-react';
 
 export default function BookingItinerary() {
   const { lang, dict } = useLanguage();
-  const { slots, removeSlot, totalHoldAmount } = useItinerary();
+  const { slots, removeSlot, totalHoldAmount, lastBookingTotal, clearLastBooking } = useItinerary();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   return (
@@ -37,22 +37,44 @@ export default function BookingItinerary() {
           )}
         </div>
 
-        {/* Empty State */}
+        {/* Empty State / Cart Memory */}
         {slots.length === 0 ? (
-          <div className="p-12 text-center rounded-3xl bg-bgWarm border border-dashed border-gray-300 space-y-4">
-            <div className="w-12 h-12 rounded-full bg-accent-light text-primary mx-auto flex items-center justify-center">
-              <CalendarDays className="w-6 h-6 text-primary" />
+          lastBookingTotal ? (
+            <div className="p-8 sm:p-10 text-center rounded-3xl bg-emerald-50 border border-emerald-100 space-y-5 shadow-sm">
+              <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center">
+                <CheckCircle2 className="w-7 h-7" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="font-heading text-xl font-bold text-emerald-800">
+                  {dict.itineraryCart.recentBookingTitle}
+                </h3>
+                <p className="text-sm text-emerald-700/80 max-w-sm mx-auto leading-relaxed">
+                  {dict.itineraryCart.recentBookingText} <strong className="font-bold">{lastBookingTotal} €</strong> {dict.itineraryCart.recentBookingText2}
+                </p>
+              </div>
+              <button
+                onClick={clearLastBooking}
+                className="inline-flex items-center gap-2 bg-white text-emerald-700 border border-emerald-200 font-semibold text-xs px-5 py-2.5 rounded-full hover:bg-emerald-50 hover:border-emerald-300 transition-all shadow-sm"
+              >
+                <span>{dict.itineraryCart.bookAnother}</span>
+              </button>
             </div>
-            <p className="text-base text-charcoal-muted max-w-md mx-auto">
-              {dict.itineraryCart.emptyText}
-            </p>
-            <Link
-              href="/services"
-              className="inline-flex items-center gap-2 bg-primary text-white font-semibold text-xs px-5 py-2.5 rounded-full hover:bg-primary-dark transition-all"
-            >
-              <span>{dict.servicesSection.title}</span>
-            </Link>
-          </div>
+          ) : (
+            <div className="p-12 text-center rounded-3xl bg-bgWarm border border-dashed border-gray-300 space-y-4">
+              <div className="w-12 h-12 rounded-full bg-accent-light text-primary mx-auto flex items-center justify-center">
+                <CalendarDays className="w-6 h-6 text-primary" />
+              </div>
+              <p className="text-base text-charcoal-muted max-w-md mx-auto">
+                {dict.itineraryCart.emptyText}
+              </p>
+              <Link
+                href="/services"
+                className="inline-flex items-center gap-2 bg-primary text-white font-semibold text-xs px-5 py-2.5 rounded-full hover:bg-primary-dark transition-all"
+              >
+                <span>{dict.servicesSection.title}</span>
+              </Link>
+            </div>
+          )
         ) : (
           /* Multi-Slot List */
           <div className="space-y-4">

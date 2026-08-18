@@ -23,6 +23,7 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
   const [date, setDate] = useState<string>(minDateStr);
   const [startTime, setStartTime] = useState<string>('09:00');
   const [durationHours, setDurationHours] = useState<number>(2);
+  const [isAdded, setIsAdded] = useState(false);
 
   // Compute start hour and max available hours so end time never exceeds 23:00 operating limit
   const [startH, startM] = (startTime || '09:00').split(':').map((v) => parseInt(v, 10) || 0);
@@ -59,7 +60,11 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
       hourlyRate,
       subtotal,
     });
-    onClose();
+    setIsAdded(true);
+    setTimeout(() => {
+      onClose();
+      setIsAdded(false);
+    }, 1500);
   };
 
   const getHoursText = (h: number) => {
@@ -186,10 +191,13 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-3.5 px-6 bg-primary text-white font-semibold rounded-xl hover:bg-primary-dark transition-all shadow-md active:scale-98 flex items-center justify-center gap-2"
+            disabled={isAdded}
+            className={`w-full py-3.5 px-6 font-semibold rounded-xl transition-all shadow-md active:scale-98 flex items-center justify-center gap-2 ${
+              isAdded ? 'bg-emerald-500 text-white cursor-not-allowed' : 'bg-primary text-white hover:bg-primary-dark'
+            }`}
           >
-            <CheckCircle2 className="w-5 h-5 text-accent-light" />
-            <span>{dict.servicesSection.confirmAddSlot}</span>
+            <CheckCircle2 className={`w-5 h-5 ${isAdded ? 'text-white' : 'text-accent-light'}`} />
+            <span>{isAdded ? dict.servicesSection.addedSlot : dict.servicesSection.confirmAddSlot}</span>
           </button>
 
         </form>
