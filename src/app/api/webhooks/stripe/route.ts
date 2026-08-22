@@ -63,16 +63,14 @@ export async function POST(req: NextRequest) {
                 body: JSON.stringify({
                   from: 'Handy Maison <joy@handymaison.fr>',
                   to: customerEmail,
-                  subject: 'Votre demande de réservation / Your booking request',
+                  subject: 'Demande reçue / Request received',
                   html: `
                     <div style="font-family: sans-serif; padding: 20px;">
-                      <h2>Merci pour votre demande !</h2>
-                      <p>Votre pré-autorisation bancaire a bien été enregistrée.</p>
-                      <p>Nous examinons votre demande et vous confirmerons l'intervention très prochainement.</p>
+                      <h2>Demande reçue !</h2>
+                      <p>Votre demande est en cours d'examen. Une pré-autorisation a été placée sur votre carte bancaire (aucun montant n'a encore été débité).</p>
                       <hr />
-                      <h2>Thank you for your request!</h2>
-                      <p>Your payment hold has been successfully authorized.</p>
-                      <p>We are reviewing your request and will confirm your service shortly.</p>
+                      <h2>Request received!</h2>
+                      <p>Your request is pending review. A temporary hold has been placed on your card (no funds have been charged yet).</p>
                     </div>
                   `
                 }),
@@ -89,7 +87,7 @@ export async function POST(req: NextRequest) {
               body: JSON.stringify({
                 from: 'Handy Maison <joy@handymaison.fr>',
                 to: 'handymaison.idf@gmail.com',
-                subject: '🚨 New booking request!',
+                subject: '🚨 Booking request!',
                 html: `
                   <div style="font-family: sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 8px;">
                     <h2 style="color: #047857;">New Booking Hold Requires Approval</h2>
@@ -126,14 +124,14 @@ export async function POST(req: NextRequest) {
                 body: JSON.stringify({
                   from: 'Handy Maison <joy@handymaison.fr>',
                   to: customerEmail,
-                  subject: 'Intervention Confirmée / Booking Accepted',
+                  subject: 'Réservation confirmée / Booking confirmed',
                   html: `
                     <div style="font-family: sans-serif; padding: 20px;">
-                      <h2>Intervention Confirmée !</h2>
-                      <p>Votre réservation a été acceptée et le paiement a été validé.</p>
+                      <h2>Réservation confirmée !</h2>
+                      <p>Votre réservation a été acceptée et votre carte a été débitée avec succès. Nous avons hâte de vous servir !</p>
                       <hr />
-                      <h2>Booking Accepted!</h2>
-                      <p>Your booking has been confirmed and the payment has been successfully processed.</p>
+                      <h2>Booking confirmed!</h2>
+                      <p>Your booking has been accepted and your card was successfully charged. We look forward to serving you!</p>
                     </div>
                   `
                 }),
@@ -146,6 +144,38 @@ export async function POST(req: NextRequest) {
         break;
       case 'payment_intent.canceled':
         await supabase.from('bookings').update({ status: 'declined' }).eq('stripe_payment_intent_id', event.data.object.id);
+        
+        try {
+          const apiKey = process.env.RESEND_API_KEY;
+          if (apiKey) {
+            const customerEmail = event.data.object.metadata?.customer_email;
+            if (customerEmail) {
+              await fetch('https://api.resend.com/emails', {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${apiKey}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  from: 'Handy Maison <joy@handymaison.fr>',
+                  to: customerEmail,
+                  subject: 'Réservation annulée / Booking canceled',
+                  html: `
+                    <div style="font-family: sans-serif; padding: 20px;">
+                      <h2>Réservation annulée</h2>
+                      <p>Votre demande de réservation n'a pas pu être satisfaite à cette date. La pré-autorisation sur votre carte a été intégralement libérée, aucun montant n'a été débité.</p>
+                      <hr />
+                      <h2>Booking canceled</h2>
+                      <p>We could not accommodate your booking request at this time. The hold on your card has been fully released, and you have not been charged.</p>
+                    </div>
+                  `
+                }),
+              });
+            }
+          }
+        } catch (mailErr) {
+          console.error('Failed to send canceled email:', mailErr);
+        }
         break;
     }
 
