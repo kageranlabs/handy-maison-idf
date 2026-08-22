@@ -50,6 +50,36 @@ export async function POST(req: NextRequest) {
         try {
           const apiKey = process.env.RESEND_API_KEY;
           if (apiKey) {
+            const customerEmail = event.data.object.metadata?.customer_email;
+            
+            // 1. Email to Client
+            if (customerEmail) {
+              await fetch('https://api.resend.com/emails', {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${apiKey}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  from: 'Handy Maison <joy@handymaison.fr>',
+                  to: customerEmail,
+                  subject: 'Votre demande de réservation / Your booking request',
+                  html: `
+                    <div style="font-family: sans-serif; padding: 20px;">
+                      <h2>Merci pour votre demande !</h2>
+                      <p>Votre pré-autorisation bancaire a bien été enregistrée.</p>
+                      <p>Nous examinons votre demande et vous confirmerons l'intervention très prochainement.</p>
+                      <hr />
+                      <h2>Thank you for your request!</h2>
+                      <p>Your payment hold has been successfully authorized.</p>
+                      <p>We are reviewing your request and will confirm your service shortly.</p>
+                    </div>
+                  `
+                }),
+              });
+            }
+
+            // 2. Email to Admin
             await fetch('https://api.resend.com/emails', {
               method: 'POST',
               headers: {
@@ -76,11 +106,43 @@ export async function POST(req: NextRequest) {
             });
           }
         } catch (mailErr) {
-          console.error('Failed to send admin notification email:', mailErr);
+          console.error('Failed to send emails:', mailErr);
         }
         break;
       case 'payment_intent.succeeded':
         await supabase.from('bookings').update({ status: 'captured' }).eq('stripe_payment_intent_id', event.data.object.id);
+        
+        try {
+          const apiKey = process.env.RESEND_API_KEY;
+          if (apiKey) {
+            const customerEmail = event.data.object.metadata?.customer_email;
+            if (customerEmail) {
+              await fetch('https://api.resend.com/emails', {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${apiKey}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  from: 'Handy Maison <joy@handymaison.fr>',
+                  to: customerEmail,
+                  subject: 'Intervention Confirmée / Booking Accepted',
+                  html: `
+                    <div style="font-family: sans-serif; padding: 20px;">
+                      <h2>Intervention Confirmée !</h2>
+                      <p>Votre réservation a été acceptée et le paiement a été validé.</p>
+                      <hr />
+                      <h2>Booking Accepted!</h2>
+                      <p>Your booking has been confirmed and the payment has been successfully processed.</p>
+                    </div>
+                  `
+                }),
+              });
+            }
+          }
+        } catch (mailErr) {
+          console.error('Failed to send accepted email:', mailErr);
+        }
         break;
       case 'payment_intent.canceled':
         await supabase.from('bookings').update({ status: 'declined' }).eq('stripe_payment_intent_id', event.data.object.id);
