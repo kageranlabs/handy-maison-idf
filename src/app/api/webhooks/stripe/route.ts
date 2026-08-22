@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     const event = JSON.parse(body);
 
     switch (event.type) {
-      case 'payment_intent.requires_capture':
+      case 'payment_intent.amount_capturable_updated':
         await supabase.from('bookings').update({ status: 'pending_hold' }).eq('stripe_payment_intent_id', event.data.object.id);
         
         try {
