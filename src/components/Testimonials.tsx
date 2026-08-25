@@ -46,7 +46,7 @@ export default function Testimonials() {
             {/* Parent Container with Relative, Overflow-Hidden, and Predefined Height */}
             <div className="relative w-full h-72 sm:h-80 md:h-96 rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-gray-900">
               <Image
-                src="/testimonial.jpeg"
+                src="/testimonial.jpg"
                 alt="Client WhatsApp Feedback Proof - Handy Maison"
                 fill
                 priority
