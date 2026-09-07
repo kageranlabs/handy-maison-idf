@@ -109,4 +109,23 @@ export const SERVICES: ServiceDefinition[] = [
       en: ['Verified & caring providers', 'School pickup & snacks'],
     },
   },
+  // TEMP — Live verification test. Revert immediately after test.
+  {
+    id: 'test',
+    hourlyRate: 1,
+    minHours: 1,
+    image: '/favicon.png',
+    name: {
+      fr: 'Test de Vérification Live',
+      en: 'Live Verification Test',
+    },
+    description: {
+      fr: 'Service temporaire de micro-autorisation pour vérification du paiement en production.',
+      en: 'Temporary micro-service for live payment authorization check.',
+    },
+    highlights: {
+      fr: ['Test temporaire – sera supprimé', 'Autorisation de 1€'],
+      en: ['Temporary – will be removed', '1€ authorization check'],
+    },
+  },
 ];

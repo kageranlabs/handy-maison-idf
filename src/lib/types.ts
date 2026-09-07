@@ -1,4 +1,4 @@
-export type ServiceTypeId = 'cleaning' | 'ironing' | 'cooking' | 'shopping' | 'errands' | 'babysitting';
+export type ServiceTypeId = 'cleaning' | 'ironing' | 'cooking' | 'shopping' | 'errands' | 'babysitting' | 'test';
 
 export type BookingStatus = 'pending_hold' | 'captured' | 'declined' | 'cancelled';
 
