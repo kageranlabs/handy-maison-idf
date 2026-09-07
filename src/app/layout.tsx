@@ -62,6 +62,14 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     alternateLocale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/logo2.png",
+        width: 1200,
+        height: 630,
+        alt: "Handy Maison – Services à domicile Paris & Île-de-France",
+      },
+    ],
   },
 };
 

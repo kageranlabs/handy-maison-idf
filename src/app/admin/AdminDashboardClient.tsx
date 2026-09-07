@@ -366,9 +366,20 @@ export default function AdminDashboardClient() {
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <User className="w-4 h-4 text-accent shrink-0" />
-                      <span className="font-heading text-base sm:text-lg font-bold text-primary">
-                        {b.customer_name}
-                      </span>
+                      <div>
+                        <span className="font-heading text-base sm:text-lg font-bold text-primary">
+                          {b.customer_name}
+                        </span>
+                        {b.created_at && (
+                          <span className="block text-[11px] text-charcoal-muted font-normal mt-0.5">
+                            Booked: {new Date(b.created_at).toLocaleString('en-GB', {
+                              day: '2-digit', month: 'short', year: 'numeric',
+                              hour: '2-digit', minute: '2-digit',
+                              timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                            })}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     {getStatusBadge(b.status)}
                   </div>
