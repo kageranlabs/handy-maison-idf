@@ -112,7 +112,7 @@ export const SERVICES: ServiceDefinition[] = [
   // TEMP — Live verification test. Revert immediately after test.
   {
     id: 'test',
-    hourlyRate: 1,
+    hourlyRate: 0.5,
     minHours: 1,
     image: '/favicon.png',
     name: {
