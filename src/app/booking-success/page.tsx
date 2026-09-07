@@ -29,8 +29,6 @@ function SuccessContent() {
         </h1>
         <p className="text-sm sm:text-base text-charcoal-muted max-w-md mx-auto leading-relaxed">
           {dict.checkout.successMessage}
-          <strong className="text-primary font-bold"> {amount} € </strong>
-          {dict.checkout.successMessage2}
         </p>
       </div>
 

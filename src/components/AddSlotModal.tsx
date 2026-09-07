@@ -115,7 +115,7 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
         <form onSubmit={handleSubmit} className="space-y-5">
           
           {/* Service Date */}
-          <div>
+          <div className="overflow-hidden">
             <label className="block text-xs font-semibold text-charcoal mb-1.5 flex items-center gap-1.5">
               <Calendar className="w-4 h-4 text-primary" />
               {dict.servicesSection.dateLabel}
@@ -126,13 +126,13 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
               value={date}
               onChange={(e) => setDate(e.target.value)}
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium"
+              className="w-full box-border max-w-full appearance-none px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium"
             />
           </div>
 
           {/* Start Time & Duration */}
           <div className="grid grid-cols-2 gap-4">
-            <div>
+            <div className="overflow-hidden">
               <label className="block text-xs font-semibold text-charcoal mb-1.5 flex items-center gap-1.5">
                 <Clock className="w-4 h-4 text-primary" />
                 {dict.servicesSection.startTimeLabel}
@@ -141,7 +141,7 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
                 translate="no"
-                className="notranslate w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium bg-white"
+                className="notranslate w-full box-border max-w-full appearance-none px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium bg-white"
               >
                 {startTimes.map((t) => (
                   <option key={t} value={t} translate="no" className="notranslate">
@@ -151,7 +151,7 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
               </select>
             </div>
 
-            <div>
+            <div className="overflow-hidden">
               <label className="block text-xs font-semibold text-charcoal mb-1.5 flex items-center gap-1.5">
                 <Clock className="w-4 h-4 text-primary" />
                 {dict.servicesSection.durationLabel}
@@ -159,7 +159,7 @@ export default function AddSlotModal({ service, onClose }: AddSlotModalProps) {
               <select
                 value={String(durationHours)}
                 onChange={(e) => setDurationHours(Number(e.target.value))}
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium bg-white"
+                className="w-full box-border max-w-full appearance-none px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium bg-white"
               >
                 {durationOptions.map((h) => (
                   <option key={h} value={String(h)}>

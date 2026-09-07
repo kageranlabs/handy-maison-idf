@@ -154,6 +154,35 @@ export default function Testimonials() {
               </div>
             </div>
 
+            <div className="bg-bgWarm rounded-3xl p-6 sm:p-8 shadow-card border border-gray-200/80 space-y-4 hover:shadow-lg transition-all">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1 text-amber-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-amber-400" />
+                  ))}
+                </div>
+                <Quote className="w-6 h-6 text-accent/40" />
+              </div>
+
+              <p className="text-sm text-charcoal leading-relaxed italic">
+                "{lang === 'fr' ? (
+                  <>Bonsoir Joy, Merci d'avoir pris soin de la maison pendant mon absence.</>
+                ) : (
+                  <>Good evening Joy, Thank you for taking care of the house during my absence.</>
+                )}"
+              </p>
+
+              <div className="pt-4 border-t border-gray-200/60 flex items-center justify-between text-xs">
+                <div>
+                  <h4 className="font-heading font-bold text-primary">Kamsy</h4>
+                  <span className="text-charcoal-muted font-medium">Paris</span>
+                </div>
+                <span className="text-[11px] text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full font-medium">
+                  {lang === 'fr' ? 'Client Vérifié' : 'Verified Client'}
+                </span>
+              </div>
+            </div>
+
           </div>
 
         </div>

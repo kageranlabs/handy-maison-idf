@@ -67,10 +67,10 @@ export async function POST(req: NextRequest) {
                   html: `
                     <div style="font-family: sans-serif; padding: 20px;">
                       <h2>Demande reçue !</h2>
-                      <p>Votre demande est en cours d'examen. Une pré-autorisation a été placée sur votre carte bancaire (aucun montant n'a encore été débité).</p>
+                      <p>Merci d'avoir choisi Handy Maison. Nous traitons votre demande et vous contacterons très rapidement. Une réservation temporaire a été effectuée sur votre carte pour garantir votre créneau (aucun montant n'est débité pour le moment).</p>
                       <hr />
                       <h2>Request received!</h2>
-                      <p>Your request is pending review. A temporary hold has been placed on your card (no funds have been charged yet).</p>
+                      <p>Thank you for choosing Handy Maison. Your request is being reviewed and we will be in touch shortly. A temporary pre-authorization has been placed on your card to hold your time slot (no funds have been debited).</p>
                     </div>
                   `
                 }),
