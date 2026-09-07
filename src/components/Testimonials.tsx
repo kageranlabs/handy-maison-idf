@@ -29,38 +29,75 @@ export default function Testimonials() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Left Column: Prominent Visual WhatsApp Feedback Screenshot Showcase */}
-          <div className="lg:col-span-5 bg-bgWarm rounded-3xl p-6 sm:p-8 shadow-card border border-gray-200/80 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200/60">
-                <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
-                <span>{lang === 'fr' ? 'Retour Client Direct WhatsApp' : 'Direct WhatsApp Client Proof'}</span>
+          {/* Left Column: Prominent Visual WhatsApp Feedback Screenshots */}
+          <div className="lg:col-span-5 space-y-8">
+            {/* First Proof */}
+            <div className="bg-bgWarm rounded-3xl p-6 sm:p-8 shadow-card border border-gray-200/80 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200/60">
+                  <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>{lang === 'fr' ? 'Retour Client Direct WhatsApp' : 'Direct WhatsApp Client Proof'}</span>
+                </div>
+                <div className="flex items-center gap-1 text-amber-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                  ))}
+                </div>
               </div>
-              <div className="flex items-center gap-1 text-amber-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
-                ))}
+
+              {/* Parent Container with Relative, Overflow-Hidden, and Predefined Height */}
+              <div className="relative w-full h-72 sm:h-80 md:h-96 rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-gray-900">
+                <Image
+                  src="/testimonial.jpg"
+                  alt="Client WhatsApp Feedback Proof - Handy Maison"
+                  fill
+                  priority
+                  className="object-contain object-center p-1"
+                  sizes="(max-width: 1024px) 100vw, 500px"
+                />
+              </div>
+
+              <div className="pt-2 text-xs text-charcoal-muted flex items-center justify-between">
+                <span className="flex items-center gap-1 font-semibold text-primary">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-accent" />
+                  {lang === 'fr' ? 'Retour Authentique Vérifié' : 'Authentic Verified Feedback'}
+                </span>
+                <span>Île-de-France</span>
               </div>
             </div>
 
-            {/* Parent Container with Relative, Overflow-Hidden, and Predefined Height */}
-            <div className="relative w-full h-72 sm:h-80 md:h-96 rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-gray-900">
-              <Image
-                src="/testimonial.jpg"
-                alt="Client WhatsApp Feedback Proof - Handy Maison"
-                fill
-                priority
-                className="object-contain object-center p-1"
-                sizes="(max-width: 1024px) 100vw, 500px"
-              />
-            </div>
+            {/* Second Proof */}
+            <div className="bg-bgWarm rounded-3xl p-6 sm:p-8 shadow-card border border-gray-200/80 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200/60">
+                  <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>{lang === 'fr' ? 'Retour Client Direct WhatsApp' : 'Direct WhatsApp Client Proof'}</span>
+                </div>
+                <div className="flex items-center gap-1 text-amber-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                  ))}
+                </div>
+              </div>
 
-            <div className="pt-2 text-xs text-charcoal-muted flex items-center justify-between">
-              <span className="flex items-center gap-1 font-semibold text-primary">
-                <CheckCircle2 className="w-3.5 h-3.5 text-accent" />
-                {lang === 'fr' ? 'Retour Authentique Vérifié' : 'Authentic Verified Feedback'}
-              </span>
-              <span>Île-de-France</span>
+              {/* Parent Container with Relative, Overflow-Hidden, and Predefined Height */}
+              <div className="relative w-full h-72 sm:h-80 md:h-96 rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-gray-900">
+                <Image
+                  src="/testimonial2.jpg"
+                  alt="Client WhatsApp Feedback Proof 2 - Handy Maison"
+                  fill
+                  className="object-contain object-center p-1"
+                  sizes="(max-width: 1024px) 100vw, 500px"
+                />
+              </div>
+
+              <div className="pt-2 text-xs text-charcoal-muted flex items-center justify-between">
+                <span className="flex items-center gap-1 font-semibold text-primary">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-accent" />
+                  {lang === 'fr' ? 'Retour Authentique Vérifié' : 'Authentic Verified Feedback'}
+                </span>
+                <span>Île-de-France</span>
+              </div>
             </div>
           </div>
 
