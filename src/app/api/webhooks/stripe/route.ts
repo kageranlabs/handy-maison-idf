@@ -1,7 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase/client';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { BookingStatus } from '@/lib/types';
 
 export const runtime = 'edge';
+
+function getSupabaseAdmin(): SupabaseClient {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://qtdzzqywftsirghlpzsc.supabase.co';
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || '';
+
+  return createClient(supabaseUrl, supabaseServiceKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  });
+}
+
+async function updateBookingByPaymentIntentId(
+  supabaseAdmin: SupabaseClient,
+  paymentIntentId: string,
+  status: BookingStatus
+): Promise<boolean> {
+  const { data, error } = await supabaseAdmin
+    .from('bookings')
+    .update({ status })
+    .eq('stripe_payment_intent_id', paymentIntentId)
+    .select('id')
+    .maybeSingle();
+
+  if (error) {
+    console.error(`Failed to update booking for PI ${paymentIntentId}:`, error);
+    return false;
+  }
+
+  if (!data) {
+    console.warn(
+      `No existing booking found for PI ${paymentIntentId}. ` +
+      'Skipping insert to avoid duplicate rows — booking must be created by /api/create-payment-intent.'
+    );
+    return false;
+  }
+
+  return true;
+}
 
 async function verifyStripeSignature(payload: string, signatureHeader: string, secret: string) {
   try {
@@ -42,10 +83,14 @@ export async function POST(req: NextRequest) {
     }
 
     const event = JSON.parse(body);
+    const supabaseAdmin = getSupabaseAdmin();
+    const paymentIntentId = event.data?.object?.id as string | undefined;
 
     switch (event.type) {
       case 'payment_intent.amount_capturable_updated':
-        await supabase.from('bookings').update({ status: 'pending_hold' }).eq('stripe_payment_intent_id', event.data.object.id);
+        if (paymentIntentId) {
+          await updateBookingByPaymentIntentId(supabaseAdmin, paymentIntentId, 'pending_hold');
+        }
         
         try {
           const apiKey = process.env.RESEND_API_KEY;
@@ -108,7 +153,9 @@ export async function POST(req: NextRequest) {
         }
         break;
       case 'payment_intent.succeeded':
-        await supabase.from('bookings').update({ status: 'captured' }).eq('stripe_payment_intent_id', event.data.object.id);
+        if (paymentIntentId) {
+          await updateBookingByPaymentIntentId(supabaseAdmin, paymentIntentId, 'captured');
+        }
         
         try {
           const apiKey = process.env.RESEND_API_KEY;
@@ -143,7 +190,9 @@ export async function POST(req: NextRequest) {
         }
         break;
       case 'payment_intent.canceled':
-        await supabase.from('bookings').update({ status: 'declined' }).eq('stripe_payment_intent_id', event.data.object.id);
+        if (paymentIntentId) {
+          await updateBookingByPaymentIntentId(supabaseAdmin, paymentIntentId, 'declined');
+        }
         
         try {
           const apiKey = process.env.RESEND_API_KEY;
